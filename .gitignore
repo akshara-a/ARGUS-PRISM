@@ -1,0 +1,68 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Distribution & Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Secrets & Local Environment
+.env
+.env.*
+!.env.example
+.env.local
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+!frontend/.env.example
+
+# ARGUS PRISM Application Cache & SQLite Databases
+.cache/
+*.sqlite
+*.sqlite3
+
+# Scratch Dossier HTML outputs & Draft Submissions (keep clean repo)
+dossier_*.html
+argus_enterprise_dossier.html
+test_dossier.html
+client_audit_certificate.html
+sub.md
+*.wav
+!examples/*.html
+
+# IDE & Editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Next.js Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env*.local
+

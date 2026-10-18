@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGUS PRISM Evidence Dossier: PostgreSQL vs MongoDB Vector Search</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --primary: #3b82f6;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 32px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 2.2rem;
+            color: #60a5fa;
+        }
+        .meta-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+            margin: 36px 0 16px 0;
+        }
+        .summary-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            font-size: 1.05rem;
+        }
+        .conflict-card {
+            background: var(--surface);
+            border: 1px solid #7f1d1d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .conflict-header {
+            font-weight: 700;
+            color: #f87171;
+            margin-bottom: 12px;
+        }
+        .conflict-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .col-neg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            padding: 12px;
+        }
+        .col-pos {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 6px;
+            padding: 12px;
+        }
+        .conflict-verdict {
+            background: #0284c7;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: #0f172a;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background: #0f172a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-size: 0.85rem;
+            color: #f472b6;
+        }
+        .footer {
+            margin-top: 64px;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ ARGUS PRISM Evidence Dossier</h1>
+            <div class="meta-row">
+                <div><strong>Target Proposition:</strong> PostgreSQL vs MongoDB Vector Search</div>
+                <div><strong>Domain:</strong> General Engineering</div>
+                <div><strong>Generated:</strong> 2026-10-15 06:35:13 UTC</div>
+                <div><strong>Engine:</strong> SerpApi Telemetry</div>
+            </div>
+        </div>
+
+        <div class="grid-stats">
+            <div class="stat-card">
+                <div class="stat-value">38.2%</div>
+                <div class="stat-label">Deterministic Confidence</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Evaluated Propositions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0.200</div>
+                <div class="stat-label">Contradiction Density</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">50.0</div>
+                <div class="stat-label">Consensus Centrality</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$0.05</div>
+                <div class="stat-label">Cost-Guard Cache Savings (5 hits)</div>
+            </div>
+        </div>
+
+        <div class="section-title">Executive Evidence Briefing</div>
+        <div class="summary-box">
+            ### Evidence Intelligence Synthesis: LegacyAPI v1 production readiness<br>**Global Deterministic Confidence:** 38.2/100<br>**Evaluated Propositions:** 5 atomic claims (4 verified, 0 contested, 0 weak).<br><br>**Authoritative & Corroborated Findings:**<br>- Developers must migrate to UnifiedAPI v2. *(Confidence: 77.6, Source: github.com)*<br>- Official migration guide confirms deprecation. *(Confidence: 71.4, Source: github.com)*<br>- Official Release Notes v3.0 - Breaking Changes LegacyAPI v1 is officially deprecated and removed as of March 2026. *(Confidence: 46.5, Source: github.com)*<br>- Issue #99: LegacyAPI v1 removed in latest release Upgraded to v3 and LegacyAPI v1 throws ImportError. *(Confidence: 42.9, Source: github.com)*
+        </div>
+
+        <div class="section-title">⚔️ Contradiction Analysis & Autonomous Disambiguation</div>
+        
+                <div class="conflict-card">
+                    <div class="conflict-header">⚡ Contradiction [legacyapi, v1, and] — Severity: HIGH (RESOLVED)</div>
+                    <div class="conflict-grid">
+                        <div class="col-neg">
+                            <strong>🔴 Disputed Claim A:</strong><br>
+                            "Comprehensive Tutorial on LegacyAPI v1 LegacyAPI v1 is the recommended production-ready solution with full backward compatibility and rock-solid stability."<br>
+                            <small><a href="https://medium.com/tech-digest/how-to-use-legacyapi-v1">https://medium.com/tech-digest/how-to-use-legacyapi-v1</a></small>
+                        </div>
+                        <div class="col-pos">
+                            <strong>🟢 Competing Claim B:</strong><br>
+                            "Issue #99: LegacyAPI v1 removed in latest release Upgraded to v3 and LegacyAPI v1 throws ImportError."<br>
+                            <small><a href="https://github.com/framework/repo/issues/99">https://github.com/framework/repo/issues/99</a></small>
+                        </div>
+                    </div>
+                    <div class="conflict-verdict"><strong>🛡️ Tie-Breaker Decision:</strong> Resolved via authoritative tie-breaker: &#x27;Issue #99: LegacyAPI v1 removed in latest release Upgraded t...&#x27; (Score: 42.86) overrules &#x27;Comprehensive Tutorial on LegacyAPI v1 LegacyAPI v1 is the r...&#x27; (Score: 0.02).</div>
+                </div>
+                
+                <div class="conflict-card">
+                    <div class="conflict-header">⚡ Contradiction [legacyapi, v1, is] — Severity: HIGH (RESOLVED)</div>
+                    <div class="conflict-grid">
+                        <div class="col-neg">
+                            <strong>🔴 Disputed Claim A:</strong><br>
+                            "Comprehensive Tutorial on LegacyAPI v1 LegacyAPI v1 is the recommended production-ready solution with full backward compatibility and rock-solid stability."<br>
+                            <small><a href="https://medium.com/tech-digest/how-to-use-legacyapi-v1">https://medium.com/tech-digest/how-to-use-legacyapi-v1</a></small>
+                        </div>
+                        <div class="col-pos">
+                            <strong>🟢 Competing Claim B:</strong><br>
+                            "Official Release Notes v3.0 - Breaking Changes LegacyAPI v1 is officially deprecated and removed as of March 2026."<br>
+                            <small><a href="https://github.com/framework/repo/releases/tag/v3.0.0">https://github.com/framework/repo/releases/tag/v3.0.0</a></small>
+                        </div>
+                    </div>
+                    <div class="conflict-verdict"><strong>🛡️ Tie-Breaker Decision:</strong> Resolved via authoritative tie-breaker: &#x27;Official Release Notes v3.0 - Breaking Changes LegacyAPI v1 ...&#x27; (Score: 46.55) overrules &#x27;Comprehensive Tutorial on LegacyAPI v1 LegacyAPI v1 is the r...&#x27; (Score: 0.02).</div>
+                </div>
+                
+
+        <div class="section-title">📊 Evaluated Proposition Ledger</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Node State</th>
+                    <th>Claim Text</th>
+                    <th>Confidence</th>
+                    <th>Citations & Tier</th>
+                    <th>Deterministic Decay Proof</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr>
+                <td><strong>#1</strong></td>
+                <td><span class="badge" style="background-color: #22c55e;">VERIFIED</span></td>
+                <td>Developers must migrate to UnifiedAPI v2.</td>
+                <td><strong>77.6</strong><br><small>Bayes: 0.6598</small></td>
+                <td><div><a href="https://github.com/framework/repo/releases/tag/v3.0.0" target="_blank">github.com</a> (1.5x)</div></td>
+                <td><code>FinalScore = min(100, max(0, Base(60.0) * Tier(1.50) * e^(-0.15*1.0) [0.8620] * Corrob(1.00) * Conflict(1.00))) = 77.58 [Bayes P(H|E) = 0.6598]</code></td>
+            </tr>
+            
+            <tr>
+                <td><strong>#2</strong></td>
+                <td><span class="badge" style="background-color: #22c55e;">VERIFIED</span></td>
+                <td>Official migration guide confirms deprecation.</td>
+                <td><strong>71.4</strong><br><small>Bayes: 0.6410</small></td>
+                <td><div><a href="https://github.com/framework/repo/issues/99" target="_blank">github.com</a> (1.5x)</div></td>
+                <td><code>FinalScore = min(100, max(0, Base(60.0) * Tier(1.50) * e^(-0.15*1.5) [0.7937] * Corrob(1.00) * Conflict(1.00))) = 71.43 [Bayes P(H|E) = 0.6410]</code></td>
+            </tr>
+            
+            <tr>
+                <td><strong>#3</strong></td>
+                <td><span class="badge" style="background-color: #22c55e;">VERIFIED</span></td>
+                <td>Official Release Notes v3.0 - Breaking Changes LegacyAPI v1 is officially deprecated and removed as of March 2026.</td>
+                <td><strong>46.5</strong><br><small>Bayes: 0.4043</small></td>
+                <td><div><a href="https://github.com/framework/repo/releases/tag/v3.0.0" target="_blank">github.com</a> (1.5x)</div></td>
+                <td><code>FinalScore = min(100, max(0, Base(60.0) * Tier(1.50) * e^(-0.15*1.0) [0.8620] * Corrob(1.00) * Conflict(0.60))) = 46.55 [Bayes P(H|E) = 0.4043]</code></td>
+            </tr>
+            
+            <tr>
+                <td><strong>#4</strong></td>
+                <td><span class="badge" style="background-color: #22c55e;">VERIFIED</span></td>
+                <td>Issue #99: LegacyAPI v1 removed in latest release Upgraded to v3 and LegacyAPI v1 throws ImportError.</td>
+                <td><strong>42.9</strong><br><small>Bayes: 0.3846</small></td>
+                <td><div><a href="https://github.com/framework/repo/issues/99" target="_blank">github.com</a> (1.5x)</div></td>
+                <td><code>FinalScore = min(100, max(0, Base(60.0) * Tier(1.50) * e^(-0.15*1.5) [0.7937] * Corrob(1.00) * Conflict(0.60))) = 42.86 [Bayes P(H|E) = 0.3846]</code></td>
+            </tr>
+            
+            <tr>
+                <td><strong>#5</strong></td>
+                <td><span class="badge" style="background-color: #6b7280;">REFUTED</span></td>
+                <td>Comprehensive Tutorial on LegacyAPI v1 LegacyAPI v1 is the recommended production-ready solution with full backward compatibility and rock-solid stability.</td>
+                <td><strong>0.0</strong><br><small>Bayes: 0.0654</small></td>
+                <td><div><a href="https://medium.com/tech-digest/how-to-use-legacyapi-v1" target="_blank">medium.com</a> (0.5x)</div></td>
+                <td><code>FinalScore = min(100, max(0, Base(60.0) * Tier(0.50) * e^(-0.15*52.7) [0.0010] * Corrob(1.00) * Conflict(0.60))) = 0.02 [Bayes P(H|E) = 0.0654]</code></td>
+            </tr>
+            
+            </tbody>
+        </table>
+
+        <div class="footer">
+            Generated autonomously by <strong>ARGUS PRISM</strong> | Deterministic Evidence Intelligence Engine<br>
+            All mathematical proofs and Bayesian probability derivations are 100% deterministic and reproducible.
+        </div>
+    </div>
+</body>
+</html>
