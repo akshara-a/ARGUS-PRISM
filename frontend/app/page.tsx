@@ -121,7 +121,7 @@ const SAMPLE_PRESETS = [
     label: "FastAPI Concurrency",
     domainCategory: "Web Services",
     tag: "94% Verified",
-    tagColor: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60",
+    tagColor: "text-blue-700 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800/60",
     text: "FastAPI async endpoints achieve high throughput using AnyIO concurrency, running on Uvicorn. It integrates Pydantic v2 for deterministic data validation and schema generation.",
     topic: "FastAPI async high-throughput performance",
     domain: "Web Services",
@@ -133,7 +133,7 @@ const SAMPLE_PRESETS = [
     label: "Kafka KRaft Consensus",
     domainCategory: "Distributed Systems",
     tag: "92% Verified",
-    tagColor: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60",
+    tagColor: "text-blue-700 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800/60",
     text: "Apache Kafka 4.0 removes ZooKeeper dependency entirely, utilizing the KRaft consensus protocol for metadata management. Brokers achieve sub-second partition leader election and linear controller scaling.",
     topic: "Apache Kafka KRaft Metadata Architecture",
     domain: "Distributed Systems",
@@ -145,7 +145,7 @@ const SAMPLE_PRESETS = [
     label: "PyTorch 2.5 Inductor",
     domainCategory: "AI / ML Systems",
     tag: "96% Verified",
-    tagColor: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60",
+    tagColor: "text-blue-700 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800/60",
     text: "PyTorch 2.5 torch.compile utilizes TorchDynamo for Python frame capture and TorchInductor as the default codegen backend, producing fused Triton GPU kernels for inference speedups.",
     topic: "PyTorch 2.5 TorchInductor Codegen",
     domain: "Deep Learning Systems",
@@ -1098,7 +1098,7 @@ export default function ArgusPrismStudio() {
       <header className="sticky top-0 z-40 border-b border-zinc-200/60 dark:border-white/5 bg-white/70 dark:bg-[#08090e]/80 backdrop-blur-xl px-4 sm:px-6 py-3 transition-colors duration-200">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/20 transition-transform hover:scale-105">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white shadow-md shadow-blue-500/20 transition-transform hover:scale-105">
               <Shield className="w-4 h-4 stroke-[2.3]" />
             </div>
             <div>
@@ -1106,7 +1106,7 @@ export default function ArgusPrismStudio() {
                 <span className="font-bold text-base tracking-tight text-zinc-900 dark:text-zinc-50 font-sans">
                   ARGUS PRISM
                 </span>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60">
                   v0.1.0
                 </span>
               </div>
@@ -1132,7 +1132,7 @@ export default function ArgusPrismStudio() {
                   </>
                 ) : (
                   <>
-                    <Moon className="w-3.5 h-3.5 text-indigo-500" />
+                    <Moon className="w-3.5 h-3.5 text-blue-500" />
                     <span className="text-[11px] font-medium">Dark</span>
                   </>
                 )}
@@ -1144,12 +1144,12 @@ export default function ArgusPrismStudio() {
               <span className="relative flex h-2 w-2">
                 <span
                   className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    apiOnline ? "bg-emerald-400" : "bg-amber-400"
+                    apiOnline ? "bg-blue-400" : "bg-amber-400"
                   }`}
                 />
                 <span
                   className={`relative inline-flex rounded-full h-2 w-2 ${
-                    apiOnline ? "bg-emerald-500" : "bg-amber-500"
+                    apiOnline ? "bg-blue-500" : "bg-amber-500"
                   }`}
                 />
               </span>
@@ -1167,7 +1167,7 @@ export default function ArgusPrismStudio() {
                 className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-white/10 text-xs text-zinc-600 dark:text-zinc-300 transition backdrop-blur-md"
                 title="Open Python Streamlit DAG Explorer"
               >
-                <Activity className="w-3.5 h-3.5 text-emerald-500" />
+                <Activity className="w-3.5 h-3.5 text-blue-500" />
                 <span className="font-medium">Telemetry</span>
                 <ExternalLink className="w-3 h-3 text-zinc-400" />
               </a>
@@ -1200,12 +1200,12 @@ export default function ArgusPrismStudio() {
                       : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-zinc-800/40"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400"}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-400"}`} />
                   <span>{tab.label}</span>
                   <span
                     className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-mono hidden md:inline-block ${
                       isActive
-                        ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40"
+                        ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/40"
                         : "bg-zinc-200/70 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400"
                     }`}
                   >
@@ -1232,7 +1232,7 @@ export default function ArgusPrismStudio() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       Document Draft Canvas
                     </h2>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -1371,7 +1371,7 @@ export default function ArgusPrismStudio() {
                           onClick={() => handleSelectPreset(p)}
                           className={`text-left p-2.5 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-1.5 ${
                             isSelected
-                              ? "bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 border-zinc-950 dark:border-white shadow-sm ring-2 ring-emerald-500/20"
+                              ? "bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 border-zinc-950 dark:border-white shadow-sm ring-2 ring-blue-500/20"
                               : "bg-zinc-50/80 dark:bg-zinc-900/60 text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/80"
                           }`}
                         >
@@ -1395,7 +1395,7 @@ export default function ArgusPrismStudio() {
                     value={draftText}
                     onChange={(e) => setDraftText(e.target.value)}
                     placeholder="Paste technical draft here..."
-                    className="w-full bg-zinc-50/80 dark:bg-zinc-950/70 rounded-xl border border-zinc-200 dark:border-white/10 p-4 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:bg-white dark:focus:bg-zinc-950 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/40 transition font-mono leading-relaxed"
+                    className="w-full bg-zinc-50/80 dark:bg-zinc-950/70 rounded-xl border border-zinc-200 dark:border-white/10 p-4 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:bg-white dark:focus:bg-zinc-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/40 transition font-mono leading-relaxed"
                   />
                   <div className="absolute bottom-3 right-3 flex items-center gap-2 text-[11px] text-zinc-400 font-mono">
                     {urlFetchSource && (
@@ -1411,8 +1411,8 @@ export default function ArgusPrismStudio() {
 
                 {/* Applied Fix Toast Alert */}
                 {appliedFixToast && (
-                  <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2 animate-slide-up">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs text-blue-800 dark:text-blue-300 flex items-center gap-2 animate-slide-up">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                     <span>Applied factual fixes to editor canvas! Click <strong>Run Factual Audit</strong> to re-verify.</span>
                   </div>
                 )}
@@ -1501,16 +1501,16 @@ export default function ArgusPrismStudio() {
                 <button
                   onClick={handleRunAudit}
                   disabled={isAuditing || !draftText.trim()}
-                  className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 dark:from-white dark:via-zinc-100 dark:to-white text-white dark:text-zinc-950 hover:opacity-95 font-semibold text-xs sm:text-sm shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white font-semibold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isAuditing ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-emerald-400 dark:text-emerald-600" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-blue-200" />
                       <span>Decomposing & Grounding Evidence...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+                      <Sparkles className="w-4 h-4 text-cyan-300" />
                       <span>Run Deterministic Factual Audit</span>
                       <ArrowRight className="w-4 h-4 opacity-70" />
                     </>
@@ -1526,7 +1526,7 @@ export default function ArgusPrismStudio() {
               {!auditReport && !isAuditing && (
                 <div className="panel-minimal p-8 text-center space-y-5">
                   <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 flex items-center justify-center mx-auto text-zinc-600 dark:text-zinc-400 shadow-inner">
-                    <Shield className="w-8 h-8 stroke-[1.8] text-emerald-500" />
+                    <Shield className="w-8 h-8 stroke-[1.8] text-blue-500" />
                   </div>
                   <div className="space-y-1.5">
                     <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Ready for Document Audit</h3>
@@ -1540,7 +1540,7 @@ export default function ArgusPrismStudio() {
                       <span>~1.2s Latency</span>
                     </div>
                     <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 flex items-center gap-2.5">
-                      <DollarSign className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <DollarSign className="w-4 h-4 text-blue-500 shrink-0" />
                       <span>$0.00 Cost</span>
                     </div>
                   </div>
@@ -1550,16 +1550,16 @@ export default function ArgusPrismStudio() {
               {isAuditing && (
                 <div className="panel-minimal p-7 space-y-4 animate-shimmer">
                   <div className="flex items-center gap-3">
-                    <RefreshCw className="w-4 h-4 text-emerald-600 dark:text-emerald-400 animate-spin" />
+                    <RefreshCw className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" />
                     <span className="font-semibold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100">
                       Evaluating Empirical Evidence...
                     </span>
                   </div>
                   <div className="space-y-2 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
-                    <p className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <p className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                       <Check className="w-3.5 h-3.5" /> 1. Decomposing atomic proposition ledger
                     </p>
-                    <p className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <p className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                       <Check className="w-3.5 h-3.5" /> 2. Dispatching multi-vector search queries
                     </p>
                     <p className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
@@ -1580,7 +1580,7 @@ export default function ArgusPrismStudio() {
                           <span
                             className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
                               auditReport.verdict === "FACTUALLY_SOUND"
-                                ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
+                                ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800"
                                 : auditReport.verdict === "PARTIALLY_CONTESTED"
                                 ? "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800"
                                 : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800"
@@ -1612,7 +1612,7 @@ export default function ArgusPrismStudio() {
                             <path
                               className={
                                 auditReport.overall_validity_score > 70
-                                  ? "text-emerald-500"
+                                  ? "text-blue-500"
                                   : auditReport.overall_validity_score > 30
                                   ? "text-amber-500"
                                   : "text-rose-500"
@@ -1667,7 +1667,7 @@ export default function ArgusPrismStudio() {
                         </div>
                         <div>
                           <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Value Unlocked</div>
-                          <div className="text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono flex items-center justify-center gap-1 mt-0.5">
+                          <div className="text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 font-mono flex items-center justify-center gap-1 mt-0.5">
                             <DollarSign className="w-3.5 h-3.5" />
                             ${roiData.dollars_unlocked.toFixed(2)}
                           </div>
@@ -1675,7 +1675,7 @@ export default function ArgusPrismStudio() {
                         <div>
                           <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Gross Margin</div>
                           <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 font-mono flex items-center justify-center gap-1 mt-0.5">
-                            <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                            <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
                             100%
                           </div>
                         </div>
@@ -1703,7 +1703,7 @@ export default function ArgusPrismStudio() {
                         </div>
                         <div className="w-full h-2 rounded-full overflow-hidden flex bg-zinc-200 dark:bg-zinc-800">
                           <div
-                            className="bg-emerald-500 transition-all duration-500"
+                            className="bg-blue-500 transition-all duration-500"
                             style={{ width: `${(auditReport.bayesian_distribution?.verified ?? 0.94) * 100}%` }}
                             title="Probability Verified"
                           />
@@ -1722,7 +1722,7 @@ export default function ArgusPrismStudio() {
 
                       <div className="flex items-center justify-between text-[10px] text-zinc-500 dark:text-zinc-400 pt-0.5 border-t border-blue-200/50 dark:border-blue-900/30">
                         <span className="flex items-center gap-1">
-                          <Shield className="w-3 h-3 text-emerald-500" />
+                          <Shield className="w-3 h-3 text-blue-500" />
                           <span>100% Zero-Persistence (Volatile RAM)</span>
                         </span>
                         <span className="font-mono text-purple-700 dark:text-purple-300 font-medium">
@@ -1755,8 +1755,8 @@ export default function ArgusPrismStudio() {
                       >
                         {copiedMd ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                            <span className="text-emerald-600 dark:text-emerald-400">Copied</span>
+                            <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                            <span className="text-blue-600 dark:text-blue-400">Copied</span>
                           </>
                         ) : (
                           <>
@@ -1828,11 +1828,11 @@ export default function ArgusPrismStudio() {
 
                         {/* Equalizer Visualizer */}
                         <div className="flex items-center gap-1 h-5 pl-1">
-                          <span className={`w-0.5 bg-emerald-500 rounded-full ${audioPlaying ? "animate-wave-1" : "h-1.5"}`} />
-                          <span className={`w-0.5 bg-emerald-500 rounded-full ${audioPlaying ? "animate-wave-2" : "h-3"}`} />
-                          <span className={`w-0.5 bg-emerald-500 rounded-full ${audioPlaying ? "animate-wave-3" : "h-2"}`} />
-                          <span className={`w-0.5 bg-emerald-500 rounded-full ${audioPlaying ? "animate-wave-4" : "h-4"}`} />
-                          <span className={`w-0.5 bg-emerald-500 rounded-full ${audioPlaying ? "animate-wave-5" : "h-1.5"}`} />
+                          <span className={`w-0.5 bg-blue-500 rounded-full ${audioPlaying ? "animate-wave-1" : "h-1.5"}`} />
+                          <span className={`w-0.5 bg-blue-500 rounded-full ${audioPlaying ? "animate-wave-2" : "h-3"}`} />
+                          <span className={`w-0.5 bg-blue-500 rounded-full ${audioPlaying ? "animate-wave-3" : "h-2"}`} />
+                          <span className={`w-0.5 bg-blue-500 rounded-full ${audioPlaying ? "animate-wave-4" : "h-4"}`} />
+                          <span className={`w-0.5 bg-blue-500 rounded-full ${audioPlaying ? "animate-wave-5" : "h-1.5"}`} />
                         </div>
                       </div>
                     </div>
@@ -1842,16 +1842,16 @@ export default function ArgusPrismStudio() {
                   {/* Autonomous Factual Auto-Fixer & Inline Diff Panel */}
                   {/* ------------------------------------------------------------- */}
                   {repairedText && (
-                    <div className="panel-minimal p-5 sm:p-6 space-y-4 border-emerald-500/30 dark:border-emerald-500/20 shadow-sm">
+                    <div className="panel-minimal p-5 sm:p-6 space-y-4 border-blue-500/30 dark:border-blue-500/20 shadow-sm">
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center">
                             <Wand2 className="w-4 h-4" />
                           </div>
                           <div>
                             <h3 className="text-xs sm:text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                               <span>Autonomous Factual Auto-Fixer</span>
-                              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                                 {fixesCount} Remediation{fixesCount !== 1 ? "s" : ""}
                               </span>
                             </h3>
@@ -1916,7 +1916,7 @@ export default function ArgusPrismStudio() {
                                 return (
                                   <span
                                     key={idx}
-                                    className="bg-emerald-100/80 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-semibold px-1 py-0.5 rounded border border-emerald-300 dark:border-emerald-900/60 inline-block mr-1 my-0.5"
+                                    className="bg-blue-100/80 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 font-semibold px-1 py-0.5 rounded border border-blue-300 dark:border-blue-900/60 inline-block mr-1 my-0.5"
                                   >
                                     + {block.text}
                                   </span>
@@ -1948,7 +1948,7 @@ export default function ArgusPrismStudio() {
                       <div className="flex flex-wrap items-center gap-2 pt-1">
                         <button
                           onClick={handleApplyFixes}
-                          className="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"
+                          className="flex-1 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>Apply Fixes to Editor</span>
@@ -1960,8 +1960,8 @@ export default function ArgusPrismStudio() {
                         >
                           {copiedRepairedToast ? (
                             <>
-                              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                              <span className="text-emerald-600 dark:text-emerald-400">Copied!</span>
+                              <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                              <span className="text-blue-600 dark:text-blue-400">Copied!</span>
                             </>
                           ) : (
                             <>
@@ -2004,7 +2004,7 @@ export default function ArgusPrismStudio() {
                                 <span
                                   className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                                     claim.status === "VERIFIED"
-                                      ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
+                                      ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800"
                                       : claim.status === "REFUTED"
                                       ? "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800"
                                       : "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800"
@@ -2049,7 +2049,7 @@ export default function ArgusPrismStudio() {
                               {claim.citations.map((c, cIdx) => (
                                 <div key={cIdx} className="p-2.5 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-white/5 text-xs space-y-1">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 uppercase font-semibold">
+                                    <span className="text-[10px] font-mono text-blue-700 dark:text-blue-400 uppercase font-semibold">
                                       Tier 1 Primary
                                     </span>
                                     <a
@@ -2088,7 +2088,7 @@ export default function ArgusPrismStudio() {
               <div className="flex items-center justify-between border-b border-zinc-200/80 dark:border-white/5 pb-4">
                 <div>
                   <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <MessageSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     Conversational Truth Assistant
                   </h2>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -2096,7 +2096,7 @@ export default function ArgusPrismStudio() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                   <span>Deterministic Engine Ready</span>
                 </div>
               </div>
@@ -2112,7 +2112,7 @@ export default function ArgusPrismStudio() {
                       className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                         msg.role === "user"
                           ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-950"
-                          : "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                          : "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
                       }`}
                     >
                       {msg.role === "user" ? "U" : <Shield className="w-3.5 h-3.5" />}
@@ -2137,7 +2137,7 @@ export default function ArgusPrismStudio() {
                                 href={c.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 hover:underline"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 hover:underline"
                                 title={c.snippet || c.url}
                               >
                                 <ExternalLink className="w-3 h-3 shrink-0" />
@@ -2156,10 +2156,10 @@ export default function ArgusPrismStudio() {
                 {isChatLoading && (
                   <div className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 flex items-center justify-center">
-                      <Shield className="w-3.5 h-3.5 animate-spin text-emerald-500" />
+                      <Shield className="w-3.5 h-3.5 animate-spin text-blue-500" />
                     </div>
                     <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-white/5 text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
-                      <RefreshCw className="w-3 h-3 animate-spin text-emerald-600 dark:text-emerald-400" />
+                      <RefreshCw className="w-3 h-3 animate-spin text-blue-600 dark:text-blue-400" />
                       <span>Verifying against authoritative docs & changelogs...</span>
                     </div>
                   </div>
@@ -2200,7 +2200,7 @@ export default function ArgusPrismStudio() {
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendChat()}
                   placeholder="Ask a technical proposition to verify..."
-                  className="flex-1 bg-zinc-50 dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-white/10 px-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/40 transition"
+                  className="flex-1 bg-zinc-50 dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-white/10 px-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/40 transition"
                 />
                 <button
                   onClick={() => handleSendChat()}
@@ -2223,7 +2223,7 @@ export default function ArgusPrismStudio() {
               <div className="flex items-center justify-between border-b border-zinc-200/80 dark:border-white/5 pb-4">
                 <div>
                   <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                    <Scale className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <Scale className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     Technology Head-to-Head Comparator
                   </h2>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -2316,9 +2316,9 @@ export default function ArgusPrismStudio() {
               {compareReport && (
                 <div className="space-y-4 pt-3 border-t border-zinc-200/80 dark:border-white/5 animate-slide-up">
                   {/* Winner Banner */}
-                  <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 via-transparent to-transparent border border-emerald-500/20 flex items-center justify-between">
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 via-transparent to-transparent border border-blue-500/20 flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+                      <span className="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider block">
                         Recommended Winner
                       </span>
                       <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 mt-0.5 flex items-center gap-2">
@@ -2373,7 +2373,7 @@ export default function ArgusPrismStudio() {
               <div className="flex items-center justify-between border-b border-zinc-200/80 dark:border-white/5 pb-4">
                 <div>
                   <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <Flame className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     Cost-Guard Dual-Tier Caching & Sentry Agent Tracing
                   </h2>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -2386,7 +2386,7 @@ export default function ArgusPrismStudio() {
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                 <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 text-center transition-transform hover:-translate-y-0.5">
                   <div className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Cache Hit Rate</div>
-                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1">58.3%</div>
+                  <div className="text-xl font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">58.3%</div>
                   <div className="text-[10px] text-zinc-400 mt-0.5">Tier 1 + SQLite</div>
                 </div>
                 <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 text-center transition-transform hover:-translate-y-0.5">
@@ -2396,7 +2396,7 @@ export default function ArgusPrismStudio() {
                 </div>
                 <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 text-center transition-transform hover:-translate-y-0.5">
                   <div className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">USD Saved</div>
-                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1">$0.07</div>
+                  <div className="text-xl font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">$0.07</div>
                   <div className="text-[10px] text-zinc-400 mt-0.5">@ $0.01 / live query</div>
                 </div>
                 <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 text-center transition-transform hover:-translate-y-0.5">
@@ -2407,15 +2407,15 @@ export default function ArgusPrismStudio() {
               </div>
 
               {/* Interactive Cost Savings Projection Calculator */}
-              <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-emerald-500/10 via-zinc-50 to-emerald-500/5 dark:from-emerald-950/30 dark:via-zinc-900/60 dark:to-emerald-950/10 border border-emerald-500/20 space-y-4">
+              <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-blue-500/10 via-zinc-50 to-blue-500/5 dark:from-blue-950/30 dark:via-zinc-900/60 dark:to-blue-950/10 border border-blue-500/20 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-emerald-500" />
+                    <Sliders className="w-4 h-4 text-blue-500" />
                     <span className="font-semibold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100">
                       Cost-Guard Cloud Economics Calculator
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
+                  <span className="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-medium">
                     ${(0.01).toFixed(2)} / commercial query
                   </span>
                 </div>
@@ -2434,7 +2434,7 @@ export default function ArgusPrismStudio() {
                     step={100}
                     value={dailyQueryVolume}
                     onChange={(e) => setDailyQueryVolume(Number(e.target.value))}
-                    className="w-full accent-emerald-500 cursor-pointer"
+                    className="w-full accent-blue-500 cursor-pointer"
                   />
                 </div>
 
@@ -2447,13 +2447,13 @@ export default function ArgusPrismStudio() {
                   </div>
                   <div className="p-2.5 rounded-lg bg-white/70 dark:bg-zinc-900/80 border border-zinc-200/60 dark:border-white/5">
                     <div className="text-[10px] text-zinc-400">Monthly Saved</div>
-                    <div className="text-xs sm:text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">
+                    <div className="text-xs sm:text-sm font-bold font-mono text-blue-600 dark:text-blue-400 mt-0.5">
                       ${monthlySavedUsd.toFixed(0)}/mo
                     </div>
                   </div>
                   <div className="p-2.5 rounded-lg bg-white/70 dark:bg-zinc-900/80 border border-zinc-200/60 dark:border-white/5">
                     <div className="text-[10px] text-zinc-400">Annual Savings</div>
-                    <div className="text-xs sm:text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">
+                    <div className="text-xs sm:text-sm font-bold font-mono text-blue-600 dark:text-blue-400 mt-0.5">
                       ${annualSavedUsd.toFixed(0)}/yr
                     </div>
                   </div>
@@ -2489,7 +2489,7 @@ export default function ArgusPrismStudio() {
                       <span>3ms</span>
                     </div>
                     <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-emerald-500 h-full w-[5%]" />
+                      <div className="bg-blue-500 h-full w-[5%]" />
                     </div>
                   </div>
 
@@ -2518,7 +2518,7 @@ export default function ArgusPrismStudio() {
               {/* Tie Breaker Breadcrumb Log */}
               <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2 shadow-inner">
                 <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
-                  <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                  <Activity className="w-3.5 h-3.5 text-blue-400" />
                   Self-Correction Breadcrumbs
                 </span>
                 <div className="space-y-1 text-xs font-mono text-zinc-300">
@@ -2528,7 +2528,7 @@ export default function ArgusPrismStudio() {
                   <p className="text-zinc-400">
                     [ELEVATING TIE-BREAKER]: Querying official changelog stream (engine=github)
                   </p>
-                  <p className="text-emerald-400">
+                  <p className="text-blue-400">
                     [RESOLVED]: Fresh 2026 release notes (Score: 46.55) overrules stale 2022 blog (Score: 0.02)
                   </p>
                 </div>
@@ -2546,7 +2546,7 @@ export default function ArgusPrismStudio() {
           <div className="panel-minimal w-full max-w-4xl h-[85vh] rounded-2xl flex flex-col overflow-hidden border border-zinc-200 dark:border-white/10 shadow-2xl animate-scale-in">
             <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-950">
               <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span className="font-semibold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100">Client Audit Certificate Preview</span>
               </div>
               <div className="flex items-center gap-2">
@@ -2630,8 +2630,8 @@ export default function ArgusPrismStudio() {
                 >
                   {copiedAcademicToast ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-emerald-600 dark:text-emerald-400">Copied</span>
+                      <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                      <span className="text-blue-600 dark:text-blue-400">Copied</span>
                     </>
                   ) : (
                     <>
@@ -2670,11 +2670,11 @@ export default function ArgusPrismStudio() {
             {/* Footer */}
             <div className="px-5 py-2.5 bg-zinc-50 dark:bg-zinc-900/60 border-t border-zinc-200 dark:border-white/10 flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                 <span>Compatible with Notion, Substack, Medium, Ghost & Obsidian Markdown parsers.</span>
               </div>
               <div className="font-mono">
-                Style: <strong className="text-zinc-700 dark:text-zinc-300">{citationStyle.toUpperCase()}</strong> | Footnotes: <strong className="text-emerald-600 dark:text-emerald-400">{auditReport?.claims.filter(c => c.citations && c.citations.length > 0).length || 0}</strong>
+                Style: <strong className="text-zinc-700 dark:text-zinc-300">{citationStyle.toUpperCase()}</strong> | Footnotes: <strong className="text-blue-600 dark:text-blue-400">{auditReport?.claims.filter(c => c.citations && c.citations.length > 0).length || 0}</strong>
               </div>
             </div>
           </div>
@@ -2690,7 +2690,7 @@ export default function ArgusPrismStudio() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/60">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center">
                   <Award className="w-4 h-4" />
                 </div>
                 <div>
@@ -2720,7 +2720,7 @@ export default function ArgusPrismStudio() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="206" height="24" viewBox="0 0 206 24" role="img">
                     <rect width="90" height="24" fill="#18181b"/>
                     <rect x="90" width="116" height="24" fill={
-                      (auditReport?.overall_validity_score ?? 91.5) >= 70 ? "#059669" : (auditReport?.overall_validity_score ?? 91.5) >= 40 ? "#d97706" : "#e11d48"
+                      (auditReport?.overall_validity_score ?? 91.5) >= 70 ? "#2563eb" : (auditReport?.overall_validity_score ?? 91.5) >= 40 ? "#d97706" : "#e11d48"
                     }/>
                     <text x="45" y="16" fill="#000" opacity=".3" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="600">ARGUS PRISM</text>
                     <text x="45" y="15" fill="#f4f4f5" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="600">ARGUS PRISM</text>
@@ -2733,7 +2733,7 @@ export default function ArgusPrismStudio() {
                   </svg>
                 </div>
                 <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  Color-coded threshold: <strong className="text-emerald-600 dark:text-emerald-400">Emerald (&ge;70%)</strong> &bull; <strong className="text-amber-500">Amber (40-69%)</strong> &bull; <strong className="text-rose-500">Rose (&lt;40%)</strong>
+                  Color-coded threshold: <strong className="text-blue-600 dark:text-blue-400">Blue (&ge;70%)</strong> &bull; <strong className="text-amber-500">Amber (40-69%)</strong> &bull; <strong className="text-rose-500">Rose (&lt;40%)</strong>
                 </span>
               </div>
 
@@ -2769,8 +2769,8 @@ export default function ArgusPrismStudio() {
                   >
                     {copiedBadgeToast ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                        <span className="text-emerald-600 dark:text-emerald-400">Copied!</span>
+                        <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                        <span className="text-blue-600 dark:text-blue-400">Copied!</span>
                       </>
                     ) : (
                       <>
@@ -2791,7 +2791,7 @@ export default function ArgusPrismStudio() {
 
             {/* Footer */}
             <div className="px-5 py-2.5 bg-zinc-50 dark:bg-zinc-900/60 border-t border-zinc-200 dark:border-white/10 text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center justify-between">
-              <span>Endpoint: <code className="font-mono text-emerald-600 dark:text-emerald-400">GET /api/badge</code></span>
+              <span>Endpoint: <code className="font-mono text-blue-600 dark:text-blue-400">GET /api/badge</code></span>
               <span>Shields.io vector format</span>
             </div>
           </div>
