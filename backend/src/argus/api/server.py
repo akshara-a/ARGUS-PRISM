@@ -168,6 +168,7 @@ def validate_draft(req: ValidateRequest) -> Dict[str, Any]:
     badge_markdown = BadgeGenerator.generate_markdown_snippet(score=report.overall_validity_score, verdict=report.verdict.value)
     badge_html = BadgeGenerator.generate_html_snippet(score=report.overall_validity_score, verdict=report.verdict.value)
 
+    audio_base64: Optional[str] = None
     audio_script: Optional[str] = None
     if req.generate_audio:
         try:

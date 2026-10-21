@@ -34,11 +34,15 @@ class AuditReportGenerator:
             "propositions_evaluated": props_count,
             "word_count": words_count,
             "estimated_hours_saved": estimated_hours,
+            "time_saved_hours": estimated_hours,
             "hourly_rate_usd": hourly_rate_usd,
             "billable_value_usd": billable_value,
+            "dollars_unlocked": billable_value,
             "compute_cost_usd": compute_cost,
+            "api_compute_cost": compute_cost,
             "net_profit_usd": net_profit,
             "profit_margin_pct": margin_pct,
+            "gross_profit_margin_pct": margin_pct,
             "turnaround_time_seconds": 1.2,
         }
 

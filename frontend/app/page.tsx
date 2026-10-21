@@ -451,7 +451,13 @@ export default function ArgusPrismStudio() {
           model_consensus: data.model_consensus ?? data.report?.model_consensus,
         };
         setAuditReport(report);
-        setRoiData(data.roi);
+        const rawRoi = (data.roi || {}) as Record<string, any>;
+        setRoiData({
+          time_saved_hours: rawRoi.time_saved_hours ?? rawRoi.estimated_hours_saved ?? 0.5,
+          dollars_unlocked: rawRoi.dollars_unlocked ?? rawRoi.billable_value_usd ?? 25.0,
+          api_compute_cost: rawRoi.api_compute_cost ?? rawRoi.compute_cost_usd ?? 0.0,
+          gross_profit_margin_pct: rawRoi.gross_profit_margin_pct ?? rawRoi.profit_margin_pct ?? 100.0,
+        });
         setHtmlCertificate(data.html_certificate);
         setMarkdownBriefing(data.markdown_briefing);
 
@@ -460,7 +466,7 @@ export default function ArgusPrismStudio() {
         }
 
         if (data.auto_fix) {
-          setRepairedText(data.repaired_text || data.auto_fix.repaired_text);
+          setRepairedText(data.repaired_text || data.auto_fix.repaired_text || null);
           setDiffBlocks(data.diff_blocks || data.auto_fix.diff_blocks || []);
           setFixesCount(data.fixes_count || data.auto_fix.fixes_count || 0);
         }
@@ -472,8 +478,8 @@ export default function ArgusPrismStudio() {
         setIsAuditing(false);
         return;
       }
-    } catch {
-      // Offline fallback simulation
+    } catch (err) {
+      console.warn("API validate unavailable, using client deterministic engine:", err);
     }
 
     // Rich client-side deterministic fallback simulation for all 6 enterprise presets
@@ -1499,6 +1505,7 @@ export default function ArgusPrismStudio() {
 
                 {/* Primary Action Button */}
                 <button
+                  type="button"
                   onClick={handleRunAudit}
                   disabled={isAuditing || !draftText.trim()}
                   className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white font-semibold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
@@ -1611,13 +1618,13 @@ export default function ArgusPrismStudio() {
                             />
                             <path
                               className={
-                                auditReport.overall_validity_score > 70
+                                (auditReport.overall_validity_score ?? 0) > 70
                                   ? "text-blue-500"
-                                  : auditReport.overall_validity_score > 30
+                                  : (auditReport.overall_validity_score ?? 0) > 30
                                   ? "text-amber-500"
                                   : "text-rose-500"
                               }
-                              strokeDasharray={`${auditReport.overall_validity_score}, 100`}
+                              strokeDasharray={`${auditReport.overall_validity_score ?? 0}, 100`}
                               strokeWidth="3.2"
                               strokeLinecap="round"
                               stroke="currentColor"
@@ -1627,7 +1634,7 @@ export default function ArgusPrismStudio() {
                           </svg>
                           <div className="absolute flex flex-col items-center">
                             <span className="text-base font-bold font-mono text-zinc-900 dark:text-zinc-100">
-                              {auditReport.overall_validity_score.toFixed(0)}%
+                              {(auditReport.overall_validity_score ?? 0).toFixed(0)}%
                             </span>
                             <span className="text-[8px] text-zinc-400 font-medium uppercase tracking-wider">
                               Score
@@ -1662,21 +1669,21 @@ export default function ArgusPrismStudio() {
                           <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Time Saved</div>
                           <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 font-mono flex items-center justify-center gap-1 mt-0.5">
                             <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                            {roiData.time_saved_hours} hrs
+                            {roiData.time_saved_hours ?? 0.5} hrs
                           </div>
                         </div>
                         <div>
                           <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Value Unlocked</div>
                           <div className="text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 font-mono flex items-center justify-center gap-1 mt-0.5">
                             <DollarSign className="w-3.5 h-3.5" />
-                            ${roiData.dollars_unlocked.toFixed(2)}
+                            ${(roiData.dollars_unlocked ?? 25.0).toFixed(2)}
                           </div>
                         </div>
                         <div>
                           <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Gross Margin</div>
                           <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 font-mono flex items-center justify-center gap-1 mt-0.5">
                             <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
-                            100%
+                            {(roiData.gross_profit_margin_pct ?? 100).toFixed(0)}%
                           </div>
                         </div>
                       </div>
@@ -2013,7 +2020,7 @@ export default function ArgusPrismStudio() {
                                   {claim.status}
                                 </span>
                                 <span className="text-xs text-zinc-400 font-mono">
-                                  Score: {claim.confidence_score.toFixed(1)}/100
+                                  Score: {(claim.confidence_score ?? 0).toFixed(1)}/100
                                 </span>
                               </div>
                               <p className="text-xs sm:text-sm font-medium text-zinc-800 dark:text-zinc-200">
