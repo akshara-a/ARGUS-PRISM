@@ -68,7 +68,10 @@ class ResponseValidator:
                 first_p = propositions[0]
                 words = [
                     w for w in re.findall(r"[A-Za-z0-9_\-\.]{3,}", first_p)
-                    if w.lower() not in ("the", "this", "that", "with", "from", "when", "into", "over", "and", "for")
+                    if w.lower() not in (
+                        "the", "this", "that", "with", "from", "when", "into", "over", "and", "for",
+                        "are", "was", "were", "did", "does", "what", "which", "how", "can"
+                    )
                 ]
                 active_topic = " ".join(words[:6]) if words else first_p[:50]
 
@@ -153,18 +156,33 @@ class ResponseValidator:
                 model_consensus=model_consensus,
             )
 
-    def _evaluate_proposition(self, proposition: str, report: EvidenceReport) -> ValidatedClaim:
-        """Match an LLM proposition against the evidence report corpus."""
+    @staticmethod
+    def _tokenize_semantic(text: str) -> set:
         stopwords = {
             "the", "this", "that", "with", "from", "have", "were", "been", "into", "their",
             "what", "when", "where", "which", "more", "most", "also", "some", "and", "for",
             "are", "was", "will", "can", "has", "had", "not", "but", "about", "your", "than",
-            "then", "just", "our", "all", "its", "use", "using", "achieve", "achieves"
+            "then", "just", "our", "all", "its", "use", "using", "achieve", "achieves",
+            "to", "in", "of", "on", "at", "by", "an", "a", "or", "is", "did", "does", "do",
+            "as", "if", "any", "over", "be", "it"
         }
-        p_tokens = {
-            t for t in re.findall(r"[a-z0-9_\-\.]{2,}", proposition.lower())
-            if t not in stopwords
-        }
+        tokens = set()
+        for raw in re.findall(r"[a-zA-Z0-9_\-\.]{2,}", text.lower()):
+            clean = raw.strip(".,;:!?-_'\"()")
+            if not clean or clean in stopwords:
+                continue
+            tokens.add(clean)
+            if clean.endswith("ed") and len(clean) > 4:
+                tokens.add(clean[:-2])
+            elif clean.endswith("ing") and len(clean) > 5:
+                tokens.add(clean[:-3])
+            elif clean.endswith("s") and len(clean) > 3 and not clean.endswith("ss"):
+                tokens.add(clean[:-1])
+        return tokens
+
+    def _evaluate_proposition(self, proposition: str, report: EvidenceReport) -> ValidatedClaim:
+        """Match an LLM proposition against the evidence report corpus."""
+        p_tokens = self._tokenize_semantic(proposition)
 
         # 1. Hallucination Trap check: If the underlying report has 0.0 confidence or 0 claims
         if report.global_confidence_score == 0.0 or not report.structured_claims:
@@ -178,27 +196,36 @@ class ResponseValidator:
 
         # 2. Check for best match in structured claims
         best_match: Optional[Claim] = None
+        best_score = 0.0
         best_jaccard = 0.0
 
         for claim in report.structured_claims:
-            c_tokens = {
-                t for t in re.findall(r"[a-z0-9_\-\.]{2,}", claim.claim_text.lower())
-                if t not in stopwords
-            }
+            c_tokens = self._tokenize_semantic(claim.claim_text)
             intersection = p_tokens.intersection(c_tokens)
             union = p_tokens.union(c_tokens)
             jaccard = len(intersection) / max(1, len(union))
 
-            if len(intersection) >= 2 and jaccard > best_jaccard:
+            # Prioritize verified claims over weak claims
+            tier_mult = 1.6 if claim.node_state == NodeState.VERIFIED else (0.4 if claim.node_state == NodeState.WEAK else 1.0)
+            score = jaccard * tier_mult
+
+            if len(intersection) >= 2 and score > best_score:
+                best_score = score
                 best_jaccard = jaccard
                 best_match = claim
 
         # 3. If best match is found in structured claims:
-        if best_match and best_jaccard >= 0.12:
-            # Check if this claim was refuted in a conflict
+        if best_match and (best_jaccard >= 0.10 or best_score >= 0.12):
             warning = None
             correction = None
-            if best_match.node_state == NodeState.REFUTED:
+
+            # Check polarity conflict: proposition asserts safe/recommended, but evidence states deprecated/removed
+            positive_markers = {"safe", "recommended", "production ready", "stable", "compatible", "supported"}
+            negative_markers = {"deprecated", "removed", "unsupported", "discontinued", "breaking change"}
+            prop_is_positive = any(m in proposition.lower() for m in positive_markers)
+            claim_is_negative = any(m in best_match.claim_text.lower() for m in negative_markers)
+
+            if best_match.node_state == NodeState.REFUTED or (prop_is_positive and claim_is_negative):
                 # Find matching conflict for authoritative correction
                 for conf in report.detailed_conflicts:
                     if conf.claim_a == best_match.claim_text or conf.claim_b == best_match.claim_text:
@@ -206,7 +233,7 @@ class ResponseValidator:
                         correction = conf.resolution_notes or f"Authoritative documentation states: {conf.claim_b}"
                         break
                 if not warning:
-                    warning = best_match.conflict_rationale or "Overruled by authoritative evidence."
+                    warning = best_match.conflict_rationale or f"Contradicts authoritative release notes: {best_match.claim_text}"
                 if not correction and best_match.supporting_citations:
                     correction = f"Check primary source: {best_match.supporting_citations[0].url}"
 
@@ -238,14 +265,8 @@ class ResponseValidator:
 
         # 4. Check if proposition specifically matches a refuted conflict item
         for conf in report.detailed_conflicts:
-            c_a_tokens = {
-                t for t in re.findall(r"[a-z0-9_\-\.]{2,}", conf.claim_a.lower())
-                if t not in stopwords
-            }
-            c_b_tokens = {
-                t for t in re.findall(r"[a-z0-9_\-\.]{2,}", conf.claim_b.lower())
-                if t not in stopwords
-            }
+            c_a_tokens = self._tokenize_semantic(conf.claim_a)
+            c_b_tokens = self._tokenize_semantic(conf.claim_b)
             overlap_a = len(p_tokens.intersection(c_a_tokens))
             overlap_b = len(p_tokens.intersection(c_b_tokens))
 

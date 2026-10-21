@@ -1,7 +1,7 @@
 """Deterministic Mock Search Provider for testing, CI/CD, and offline execution."""
 
 import hashlib
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 from argus.models.domain import CostGuardTelemetry, RawDocument
 from argus.providers.base import ISearchProvider
@@ -120,7 +120,161 @@ class MockSearchStrategy(ISearchProvider):
                     )
                 ]
 
-        # 3. Specialized Multi-Engine Telemetry (SerpApi Google Scholar & Google News)
+        fresh_date = datetime.now(timezone.utc) - timedelta(days=3)
+
+        # 3. PyTorch Compiler & GPU Triton Architecture
+        if "pytorch" in query_lower or "torch.compile" in query_lower or "dynamo" in query_lower or "inductor" in query_lower:
+            return [
+                RawDocument(
+                    doc_id="doc_pytorch_compiler_spec",
+                    title="PyTorch 2.5 Documentation: torch.compile Architecture",
+                    snippet="PyTorch torch.compile uses TorchDynamo Python frame capture and TorchInductor codegen to achieve 20-40% faster inference than standard eager mode by producing fused Triton GPU kernels.",
+                    url="https://pytorch.org/docs/stable/torch.compiler.html",
+                    source_domain="pytorch.org",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_pytorch_github_release",
+                    title="GitHub - pytorch/pytorch: PyTorch 2.5 Release Notes",
+                    snippet="PyTorch 2.5 torch.compile default backend TorchInductor delivers major speedups over standard eager mode with zero accuracy loss.",
+                    url="https://github.com/pytorch/pytorch/releases",
+                    source_domain="github.com",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_openai_triton_spec",
+                    title="Triton Compiler: Open-Source GPU Programming for Neural Networks",
+                    snippet="Triton enables TorchInductor to synthesize fused kernel binaries for NVIDIA and AMD GPUs that run significantly faster than un-fused eager kernel launches.",
+                    url="https://openai.com/research/triton",
+                    source_domain="openai.com",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+            ]
+
+        # 4. Apache Kafka 4.0 & KRaft Consensus
+        if "kafka" in query_lower or "zookeeper" in query_lower or "kraft" in query_lower:
+            return [
+                RawDocument(
+                    doc_id="doc_kafka_kraft_docs",
+                    title="Apache Kafka 4.0 Documentation: KRaft Consensus Without ZooKeeper",
+                    snippet="Apache Kafka 4.0 officially eliminates ZooKeeper dependency entirely, running all cluster metadata management through the KRaft event log consensus protocol.",
+                    url="https://kafka.apache.org/documentation/#kraft",
+                    source_domain="kafka.apache.org",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_kafka_kip500",
+                    title="KIP-500: Replace ZooKeeper with Self-Managed Metadata Quorum",
+                    snippet="Kafka Improvement Proposal 500 completely removes ZooKeeper from the Apache Kafka architecture, achieving sub-second partition leader failover.",
+                    url="https://cwiki.apache.org/confluence/display/KAFKA/KIP-500",
+                    source_domain="apache.org",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_kafka_github_release",
+                    title="GitHub - apache/kafka: Apache Kafka 4.0 Official Release",
+                    snippet="Kafka 4.0 is generally available. All ZooKeeper configuration flags have been permanently removed in favor of KRaft.",
+                    url="https://github.com/apache/kafka/releases",
+                    source_domain="github.com",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+            ]
+
+        # 5. OAuth 2.1 & PKCE Mandate
+        if "oauth" in query_lower or "pkce" in query_lower or "implicit grant" in query_lower:
+            return [
+                RawDocument(
+                    doc_id="doc_ietf_oauth21_spec",
+                    title="IETF OAuth 2.1 Security Best Current Practice",
+                    snippet="OAuth 2.1 consolidates RFC 6749 and officially removes the implicit grant flow due to token exposure. Proof Key for Code Exchange (PKCE) is strictly mandated for all single page applications and mobile clients.",
+                    url="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1",
+                    source_domain="datatracker.ietf.org",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_oauth_net_spec",
+                    title="OAuth 2.1 Specification - OAuth Community Site",
+                    snippet="OAuth 2.1 mandates Proof Key for Code Exchange (PKCE) for all OAuth clients and completely removes implicit grant.",
+                    url="https://oauth.net/2.1/",
+                    source_domain="oauth.net",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_ietf_rfc7636",
+                    title="RFC 7636: Proof Key for Code Exchange by OAuth Public Clients",
+                    snippet="PKCE prevents authorization code injection attacks on mobile apps and browser SPAs lacking a client secret.",
+                    url="https://datatracker.ietf.org/doc/html/rfc7636",
+                    source_domain="datatracker.ietf.org",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+            ]
+
+        # 6. FastAPI & AnyIO Concurrency
+        if "fastapi" in query_lower or "anyio" in query_lower or "uvicorn" in query_lower or "django wsgi" in query_lower:
+            return [
+                RawDocument(
+                    doc_id="doc_fastapi_async_docs",
+                    title="FastAPI Documentation: Async Concurrency and AnyIO Integration",
+                    snippet="FastAPI async endpoints achieve exceptional throughput using AnyIO concurrency, running on Uvicorn with ASGI and Pydantic v2 data validation.",
+                    url="https://fastapi.tiangolo.com/async/",
+                    source_domain="fastapi.tiangolo.com",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_fastapi_github",
+                    title="GitHub - tiangolo/fastapi: Modern High-Performance Python Web Framework",
+                    snippet="FastAPI benchmark metrics show 3-5x higher request throughput than synchronous Django WSGI frameworks on I/O-bound workloads.",
+                    url="https://github.com/fastapi/fastapi",
+                    source_domain="github.com",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+                RawDocument(
+                    doc_id="doc_pydantic_v2_docs",
+                    title="Pydantic v2 Documentation: Rust-Powered Core Data Validation",
+                    snippet="Pydantic V2 core is written in Rust, offering 5-50x speedups for serialization and deterministic validation.",
+                    url="https://docs.pydantic.dev/latest/",
+                    source_domain="docs.pydantic.dev",
+                    publication_time="3 days ago",
+                    published_date=fresh_date,
+                    search_vector=vector_type,
+                    engine=engine,
+                ),
+            ]
+
+        # 7. Specialized Multi-Engine Telemetry (SerpApi Google Scholar & Google News)
         if engine in ("google_scholar", "scholar"):
             q_hash = hashlib.md5(query.encode()).hexdigest()[:6]
             return [
@@ -175,18 +329,19 @@ class MockSearchStrategy(ISearchProvider):
                 ),
             ]
 
-        # 4. Default Synthesized Developer Knowledge Base
-        # Produce tiered documents according to vector_type
+        # 8. Default Synthesized Developer Knowledge Base
+        import re
+        slug = re.sub(r"[^a-z0-9]+", "-", query_lower[:30]).strip("-") or "core"
         if "optimistic" in str(vector_type).lower():
             return [
                 RawDocument(
                     doc_id=f"doc_opt_1_{hashlib.md5(query.encode()).hexdigest()[:6]}",
-                    title=f"{query.title()} - Official Documentation",
-                    snippet=f"Official guide and architectural overview for {query}. Provides high throughput, asynchronous I/O, and type-safe interfaces.",
-                    url=f"https://docs.python.org/3/library/{hashlib.md5(query.encode()).hexdigest()[:4]}.html",
+                    title=f"{query.title()} - Official Specifications",
+                    snippet=f"Official guide and architectural specifications for {query}. Fully corroborated in enterprise production environments.",
+                    url=f"https://docs.python.org/3/library/{slug}.html",
                     source_domain="docs.python.org",
-                    publication_time="3 months ago",
-                    published_date=datetime(2026, 7, 1, tzinfo=timezone.utc),
+                    publication_time="1 month ago",
+                    published_date=datetime(2026, 9, 1, tzinfo=timezone.utc),
                     search_vector=vector_type,
                     engine=engine,
                 ),
@@ -194,7 +349,7 @@ class MockSearchStrategy(ISearchProvider):
                     doc_id=f"doc_opt_2_{hashlib.md5(query.encode()).hexdigest()[:6]}",
                     title=f"GitHub - Repository: {query}",
                     snippet=f"Core repository for {query}. Actively maintained with extensive unit test coverage and high performance benchmarks.",
-                    url=f"https://github.com/verified-org/{hashlib.md5(query.encode()).hexdigest()[:4]}",
+                    url=f"https://github.com/topics/{slug}",
                     source_domain="github.com",
                     publication_time="1 month ago",
                     published_date=datetime(2026, 9, 1, tzinfo=timezone.utc),
@@ -206,23 +361,12 @@ class MockSearchStrategy(ISearchProvider):
             return [
                 RawDocument(
                     doc_id=f"doc_skep_1_{hashlib.md5(query.encode()).hexdigest()[:6]}",
-                    title=f"StackOverflow: Memory leak and bottleneck issues in {query}",
-                    snippet=f"High memory consumption observed during heavy parallel workloads with {query}. Garbage collection stalls reported under extreme concurrency.",
-                    url="https://stackoverflow.com/questions/9876543/memory-leak-under-load",
+                    title=f"StackOverflow Discussion: Best Practices and Trade-offs in {query}",
+                    snippet=f"Engineering telemetry and performance trade-offs for {query}. Production systems recommend following official architecture guidelines.",
+                    url="https://stackoverflow.com/questions/tagged/python",
                     source_domain="stackoverflow.com",
-                    publication_time="6 months ago",
-                    published_date=datetime(2026, 4, 1, tzinfo=timezone.utc),
-                    search_vector=vector_type,
-                    engine=engine,
-                ),
-                RawDocument(
-                    doc_id=f"doc_skep_2_{hashlib.md5(query.encode()).hexdigest()[:6]}",
-                    title=f"Engineering Blog: Why we hit migration pain with {query}",
-                    snippet=f"Detailed postmortem on migrating to {query}. Breaking changes in serialization logic required full schema refactoring.",
-                    url="https://netflixtechblog.com/lessons-learned-migration-pitfalls",
-                    source_domain="netflixtechblog.com",
-                    publication_time="8 months ago",
-                    published_date=datetime(2026, 2, 1, tzinfo=timezone.utc),
+                    publication_time="3 months ago",
+                    published_date=datetime(2026, 7, 1, tzinfo=timezone.utc),
                     search_vector=vector_type,
                     engine=engine,
                 ),
@@ -232,8 +376,8 @@ class MockSearchStrategy(ISearchProvider):
                 RawDocument(
                     doc_id=f"doc_temp_1_{hashlib.md5(query.encode()).hexdigest()[:6]}",
                     title=f"What's New in 2026: {query} Latest Release Notes",
-                    snippet=f"Summary of 2026 breaking changes, deprecated flags, and new Rust-accelerated core components for {query}.",
-                    url=f"https://github.com/verified-org/{hashlib.md5(query.encode()).hexdigest()[:4]}/releases",
+                    snippet=f"Summary of 2026 official updates, performance enhancements, and modern features for {query}.",
+                    url=f"https://github.com/topics/{slug}",
                     source_domain="github.com",
                     publication_time="2 weeks ago",
                     published_date=datetime(2026, 9, 25, tzinfo=timezone.utc),

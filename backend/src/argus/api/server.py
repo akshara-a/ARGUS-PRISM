@@ -3,6 +3,7 @@
 import base64
 import logging
 import os
+import re
 from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
@@ -331,6 +332,24 @@ def compare_technologies(req: CompareRequest) -> Dict[str, Any]:
     return {"comparison": comp_report.model_dump(mode="json")}
 
 
+def _canonicalize_query(text: str) -> str:
+    """Normalize interrogative conversational prompts into declarative assertions."""
+    cleaned = text.strip()
+    m = re.match(r"^(?:is|are|was|were)\s+(.+?)\s+(faster|slower|better|safe|production\s+ready|recommended|deprecated|removed)\s*(.*)\?*$", cleaned, re.I)
+    if m:
+        return f"{m.group(1)} is {m.group(2)} {m.group(3)}".strip().rstrip("?")
+    m = re.match(r"^does\s+(.+?)\s+mandate\s+(.*)\?*$", cleaned, re.I)
+    if m:
+        return f"{m.group(1)} mandates {m.group(2)}".strip().rstrip("?")
+    m = re.match(r"^did\s+(.+?)\s+remove\s+(.*)\?*$", cleaned, re.I)
+    if m:
+        return f"{m.group(1)} removed {m.group(2)}".strip().rstrip("?")
+    m = re.match(r"^does\s+(.+?)\s+exist\s+(.*)\?*$", cleaned, re.I)
+    if m:
+        return f"{m.group(1)} exists {m.group(2)}".strip().rstrip("?")
+    return cleaned.rstrip("?")
+
+
 @app.post("/api/chat")
 def chat_fact_check(req: ChatFactCheckRequest) -> Dict[str, Any]:
     """Conversational fact-checker endpoint with instant verified citations."""
@@ -341,14 +360,16 @@ def chat_fact_check(req: ChatFactCheckRequest) -> Dict[str, Any]:
     provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
     evaluator = ResearchEvaluator(provider=provider)
 
+    canonical_assertion = _canonicalize_query(query_text)
+
     rep = evaluator.validate_response(
-        response_text=query_text,
+        response_text=canonical_assertion,
         llm_backend=req.llm_backend,
     )
 
     if rep.verdict == ValidationVerdict.FACTUALLY_SOUND:
         badge = "FACTUALLY SOUND"
-        badge_color = "emerald"
+        badge_color = "blue"
     elif rep.verdict == ValidationVerdict.PARTIALLY_CONTESTED:
         badge = "PARTIALLY CONTESTED"
         badge_color = "amber"
