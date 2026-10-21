@@ -25,7 +25,7 @@ services:
       - key: DEFAULT_SEARCH_PROVIDER
         value: duckduckgo
       - key: ARGUS_MOCK_FALLBACK
-        value: "true"
+        value: "false"
       - key: CORS_ALLOWED_ORIGINS
         value: "*"
       - key: SENTRY_ENVIRONMENT
@@ -34,13 +34,27 @@ services:
         value: "1.0"
 
       # ------------------------------------------------------------------------
-      # Optional Secrets (Prompted securely in Render Dashboard; never committed)
+      # ElevenLabs Spoken Audio Voice Personas & API Keys
+      # ------------------------------------------------------------------------
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_ENDPOINT
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_VOICE_RACHEL
+        sync: false
+      - key: ELEVENLABS_VOICE_ADAM
+        sync: false
+      - key: ELEVENLABS_VOICE_DREW
+        sync: false
+
+      # ------------------------------------------------------------------------
+      # Search & Observability Secrets
       # ------------------------------------------------------------------------
       - key: SERPAPI_API_KEY
         sync: false
       - key: SENTRY_DSN
-        sync: false
-      - key: ELEVENLABS_API_KEY
         sync: false
       - key: BACKBOARD_API_KEY
         sync: false
@@ -78,14 +92,36 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: DEFAULT_SEARCH_PROVIDER
-        value: duckduckgo
+        value: serpapi
       - key: ARGUS_MOCK_FALLBACK
-        value: "true"
+        value: "false"
       - key: SENTRY_ENVIRONMENT
         value: production
       - key: SENTRY_TRACES_SAMPLE_RATE
         value: "1.0"
+
+      # ------------------------------------------------------------------------
+      # ElevenLabs Spoken Audio Voice Personas & API Keys
+      # ------------------------------------------------------------------------
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_ENDPOINT
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_VOICE_RACHEL
+        sync: false
+      - key: ELEVENLABS_VOICE_ADAM
+        sync: false
+      - key: ELEVENLABS_VOICE_DREW
+        sync: false
+
+      # ------------------------------------------------------------------------
+      # Search & Observability Secrets
+      # ------------------------------------------------------------------------
       - key: SERPAPI_API_KEY
         sync: false
       - key: SENTRY_DSN
+        sync: false
+      - key: BACKBOARD_API_KEY
         sync: false

@@ -34,12 +34,21 @@ class ElevenLabsBriefing:
 
     @classmethod
     def resolve_voice_id(cls, persona_or_id: Optional[str] = None) -> str:
-        """Resolve persona identifier into a valid ElevenLabs voice ID."""
+        """Resolve persona identifier into a valid ElevenLabs voice ID strictly from environment variables."""
+        default_vid = os.getenv("ELEVENLABS_VOICE_ID", "")
         if not persona_or_id:
-            return cls.DEFAULT_VOICE_ID
+            return default_vid
+
         p_clean = persona_or_id.lower().strip()
+        if p_clean in ("rachel", "executive"):
+            return os.getenv("ELEVENLABS_VOICE_RACHEL", os.getenv("ELEVENLABS_VOICE_ID", ""))
+        elif p_clean in ("adam", "skeptical"):
+            return os.getenv("ELEVENLABS_VOICE_ADAM", "")
+        elif p_clean in ("drew", "ghostwriter"):
+            return os.getenv("ELEVENLABS_VOICE_DREW", "")
+
         if p_clean in cls.VOICE_PERSONAS:
-            return cls.VOICE_PERSONAS[p_clean]["id"]
+            return cls.VOICE_PERSONAS[p_clean]["id"] or default_vid
         return persona_or_id
 
     @classmethod
@@ -116,34 +125,35 @@ class ElevenLabsBriefing:
         api_key = cls.get_api_key()
         effective_voice_id = cls.resolve_voice_id(voice_id)
 
-        if api_key:
-            try:
-                endpoint_tpl = os.getenv("ELEVENLABS_API_ENDPOINT", cls.API_URL)
-                url = endpoint_tpl.format(voice_id=effective_voice_id)
-                headers = {
-                    "Accept": "audio/mpeg",
-                    "Content-Type": "application/json",
-                    "xi-api-key": api_key,
-                }
-                payload = {
-                    "text": script,
-                    "model_id": "eleven_turbo_v2_5",
-                    "voice_settings": {
-                        "stability": 0.5,
-                        "similarity_boost": 0.75,
-                    },
-                }
-                response = requests.post(url, json=payload, headers=headers, timeout=20.0)
-                if response.status_code == 200:
-                    audio_bytes = response.content
-                    if output_file:
-                        with open(output_file, "wb") as f:
-                            f.write(audio_bytes)
-                    return audio_bytes, "audio/mp3"
-                else:
-                    logger.warning(f"ElevenLabs API returned {response.status_code}: {response.text}")
-            except Exception as e:
-                logger.warning(f"ElevenLabs request error: {e}. Falling back to synthetic tone.")
+        if api_key and effective_voice_id:
+            endpoint_tpl = os.getenv("ELEVENLABS_API_ENDPOINT") or cls.API_URL
+            if endpoint_tpl:
+                try:
+                    url = endpoint_tpl.format(voice_id=effective_voice_id)
+                    headers = {
+                        "Accept": "audio/mpeg",
+                        "Content-Type": "application/json",
+                        "xi-api-key": api_key,
+                    }
+                    payload = {
+                        "text": script,
+                        "model_id": "eleven_turbo_v2_5",
+                        "voice_settings": {
+                            "stability": 0.5,
+                            "similarity_boost": 0.75,
+                        },
+                    }
+                    response = requests.post(url, json=payload, headers=headers, timeout=20.0)
+                    if response.status_code == 200:
+                        audio_bytes = response.content
+                        if output_file:
+                            with open(output_file, "wb") as f:
+                                f.write(audio_bytes)
+                        return audio_bytes, "audio/mp3"
+                    else:
+                        logger.warning(f"ElevenLabs API returned {response.status_code}: {response.text}")
+                except Exception as e:
+                    logger.warning(f"ElevenLabs request error: {e}. Falling back to synthetic tone.")
 
         # Zero-dependency synthetic chime fallback (WAV audio format)
         audio_bytes = cls._generate_synthetic_tone(duration_seconds=3.0)

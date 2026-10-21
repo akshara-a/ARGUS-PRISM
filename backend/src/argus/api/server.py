@@ -183,8 +183,11 @@ def validate_draft(req: ValidateRequest) -> Dict[str, Any]:
         except Exception as e:
             logger.warning("Failed to generate audio in API (%s)", e)
 
+    report_dict = report.model_dump(mode="json")
+    report_dict["claims"] = report_dict.get("structured_claims", report_dict.get("validated_propositions", []))
+
     return {
-        "report": report.model_dump(mode="json"),
+        "report": report_dict,
         "roi": roi,
         "html_certificate": html_dossier,
         "markdown_briefing": markdown_briefing,
@@ -296,8 +299,11 @@ def auto_fix_draft(req: AutoFixRequest) -> Dict[str, Any]:
     report = evaluator.validate_response(response_text=req.text, llm_backend=req.llm_backend)
     fix_data = FactualAutoFixer.repair_document(req.text, report)
 
+    report_dict = report.model_dump(mode="json")
+    report_dict["claims"] = report_dict.get("structured_claims", report_dict.get("validated_propositions", []))
+
     return {
-        "report": report.model_dump(mode="json"),
+        "report": report_dict,
         **fix_data,
     }
 
@@ -313,8 +319,11 @@ def execute_research(req: ResearchRequest) -> Dict[str, Any]:
         decay_lambda=req.decay_lambda,
     )
     dossier = evaluator.generate_dossier(topic=req.topic)
+    report_dict = report.model_dump(mode="json")
+    report_dict["claims"] = report_dict.get("structured_claims", report_dict.get("validated_propositions", []))
+
     return {
-        "report": report.model_dump(mode="json"),
+        "report": report_dict,
         "html_dossier": dossier,
     }
 

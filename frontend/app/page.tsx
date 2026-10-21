@@ -444,11 +444,36 @@ export default function ArgusPrismStudio() {
 
       if (res.ok) {
         const data = await res.json();
-        const report = {
-          ...data.report,
-          bayesian_confidence_interval: data.bayesian_confidence_interval ?? data.report?.bayesian_confidence_interval,
-          bayesian_distribution: data.bayesian_distribution ?? data.report?.bayesian_distribution,
-          model_consensus: data.model_consensus ?? data.report?.model_consensus,
+        const rawReport = data.report || {};
+        const rawList = rawReport.claims || rawReport.validated_propositions || rawReport.structured_claims || [];
+        const rawClaims: ClaimItem[] = (Array.isArray(rawList) ? rawList : []).map((c: any) => ({
+          proposition_text: c.proposition_text || c.claim_text || "",
+          status: (c.status || c.node_state || "VERIFIED") as any,
+          confidence_score: typeof c.confidence_score === "number" ? c.confidence_score : 50.0,
+          contradiction_warning: c.contradiction_warning || null,
+          suggested_correction: c.suggested_correction || null,
+          citations: (c.citations || c.supporting_citations || []).map((cit: any) => ({
+            url: typeof cit.url === "string" ? cit.url : (cit.url?.url || String(cit.url || "")),
+            tier_weight: cit.tier_weight ?? 1.0,
+            snippet: cit.snippet || "",
+            source_engine: cit.source_engine || cit.engine || "web",
+          })),
+        }));
+
+        const report: AuditReport = {
+          topic: rawReport.topic || topic || "Deterministic Factual Audit",
+          overall_validity_score: rawReport.overall_validity_score ?? 0,
+          verdict: rawReport.verdict || "FACTUALLY_SOUND",
+          summary: rawReport.summary || "",
+          total_claims_evaluated: rawReport.total_claims_evaluated ?? rawClaims.length,
+          verified_count: rawReport.verified_count ?? rawClaims.filter((c) => c.status === "VERIFIED").length,
+          contested_count: rawReport.contested_count ?? rawClaims.filter((c) => c.status === "CONTESTED").length,
+          refuted_count: rawReport.refuted_count ?? rawClaims.filter((c) => c.status === "REFUTED").length,
+          weak_count: rawReport.weak_count ?? rawClaims.filter((c) => c.status === "WEAK").length,
+          claims: rawClaims,
+          bayesian_confidence_interval: data.bayesian_confidence_interval ?? rawReport.bayesian_confidence_interval,
+          bayesian_distribution: data.bayesian_distribution ?? rawReport.bayesian_distribution,
+          model_consensus: data.model_consensus ?? rawReport.model_consensus,
         };
         setAuditReport(report);
         const rawRoi = (data.roi || {}) as Record<string, any>;
@@ -763,16 +788,16 @@ export default function ArgusPrismStudio() {
     const reportScore = auditReport?.overall_validity_score ? auditReport.overall_validity_score.toFixed(1) : "92.0";
     const reportVerdict = auditReport?.verdict || "FACTUALLY_SOUND";
 
-    const claimsWithCits = auditReport?.claims
-      ? auditReport.claims.filter((c) => c.citations && c.citations.length > 0)
-      : [];
+    const claimsWithCits = (auditReport?.claims || [])
+      .filter((c) => c && c.citations && c.citations.length > 0);
 
     let annotatedText = baseText;
     const bibItems: Array<{ index: number; host: string; url: string; snippet: string; tier: string }> = [];
     const urlMap = new Map<string, number>();
 
     claimsWithCits.forEach((claim) => {
-      const cit = claim.citations[0];
+      const cit = claim.citations?.[0];
+      if (!cit || !cit.url) return;
       const url = cit.url;
       let footnoteIdx: number;
       if (urlMap.has(url)) {
@@ -1992,10 +2017,10 @@ export default function ArgusPrismStudio() {
                   {/* Individual Proposition Cards */}
                   <div className="space-y-2.5">
                     <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block">
-                      Proposition Breakdown ({auditReport.claims.length})
+                      Proposition Breakdown ({auditReport.claims?.length || 0})
                     </span>
 
-                    {auditReport.claims.map((claim, idx) => {
+                    {(auditReport.claims || []).map((claim, idx) => {
                       const isExpanded = expandedClaimIdx === idx;
                       return (
                         <div
@@ -2048,12 +2073,12 @@ export default function ArgusPrismStudio() {
                           )}
 
                           {/* Expanded Citations */}
-                          {isExpanded && claim.citations.length > 0 && (
+                          {isExpanded && (claim.citations?.length || 0) > 0 && (
                             <div className="mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800/60 space-y-2 animate-fade-in">
                               <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block">
                                 Authoritative Citations:
                               </span>
-                              {claim.citations.map((c, cIdx) => (
+                              {(claim.citations || []).map((c, cIdx) => (
                                 <div key={cIdx} className="p-2.5 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-white/5 text-xs space-y-1">
                                   <div className="flex items-center justify-between">
                                     <span className="text-[10px] font-mono text-blue-700 dark:text-blue-400 uppercase font-semibold">
@@ -2681,7 +2706,7 @@ export default function ArgusPrismStudio() {
                 <span>Compatible with Notion, Substack, Medium, Ghost & Obsidian Markdown parsers.</span>
               </div>
               <div className="font-mono">
-                Style: <strong className="text-zinc-700 dark:text-zinc-300">{citationStyle.toUpperCase()}</strong> | Footnotes: <strong className="text-blue-600 dark:text-blue-400">{auditReport?.claims.filter(c => c.citations && c.citations.length > 0).length || 0}</strong>
+                Style: <strong className="text-zinc-700 dark:text-zinc-300">{citationStyle.toUpperCase()}</strong> | Footnotes: <strong className="text-blue-600 dark:text-blue-400">{(auditReport?.claims || []).filter(c => (c.citations?.length || 0) > 0).length}</strong>
               </div>
             </div>
           </div>
