@@ -18,7 +18,6 @@ from argus.providers.mock_provider import MockSearchStrategy
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-DDG_LITE_DEFAULT_ENDPOINT = os.getenv("DUCKDUCKGO_ENDPOINT", "")
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -27,19 +26,23 @@ USER_AGENT = (
 
 
 class DuckDuckGoSearchStrategy(ISearchProvider):
-    """Executes live web searches via DuckDuckGo without requiring any API keys."""
+    """Executes live web searches via DuckDuckGo strictly from configured environment endpoints."""
 
     def __init__(
         self,
-        fallback_to_mock: bool = True,
+        fallback_to_mock: Optional[bool] = None,
         timeout: int = 10,
         cache: Optional[SerpApiCache] = None,
         endpoint: Optional[str] = None,
     ):
+        if fallback_to_mock is None:
+            mock_env = os.getenv("ARGUS_MOCK_FALLBACK", "false").lower()
+            fallback_to_mock = mock_env in ("true", "1", "yes")
+
         self.fallback_to_mock = fallback_to_mock
         self.timeout = timeout
-        self.endpoint = endpoint or os.getenv("DUCKDUCKGO_ENDPOINT", DDG_LITE_DEFAULT_ENDPOINT)
-        self.mock_provider = MockSearchStrategy() if fallback_to_mock else None
+        self.endpoint = (endpoint or os.getenv("DUCKDUCKGO_ENDPOINT", "")).strip()
+        self.mock_provider = MockSearchStrategy() if self.fallback_to_mock else None
         self.cache = cache or SerpApiCache()
 
     @property
@@ -105,6 +108,10 @@ class DuckDuckGoSearchStrategy(ISearchProvider):
         vector_type: Optional[str] = None,
     ) -> List[RawDocument]:
         """Query DuckDuckGo Lite endpoint and parse into RawDocument entities."""
+        if not self.endpoint or not self.endpoint.startswith("http"):
+            logger.warning("DuckDuckGo retrieval skipped: DUCKDUCKGO_ENDPOINT is not configured.")
+            return []
+
         headers = {
             "User-Agent": USER_AGENT,
             "Referer": os.getenv("DUCKDUCKGO_REFERER", self.endpoint),

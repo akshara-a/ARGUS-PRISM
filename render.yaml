@@ -22,16 +22,26 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
-      - key: DEFAULT_SEARCH_PROVIDER
-        value: duckduckgo
-      - key: ARGUS_MOCK_FALLBACK
-        value: "false"
       - key: CORS_ALLOWED_ORIGINS
         value: "*"
       - key: SENTRY_ENVIRONMENT
         value: production
       - key: SENTRY_TRACES_SAMPLE_RATE
         value: "1.0"
+
+      # ------------------------------------------------------------------------
+      # Search Engine & Ingestion Configuration (Prompted in Render Dashboard)
+      # ------------------------------------------------------------------------
+      - key: DEFAULT_SEARCH_PROVIDER
+        sync: false
+      - key: DUCKDUCKGO_ENDPOINT
+        sync: false
+      - key: DUCKDUCKGO_REFERER
+        sync: false
+      - key: ARGUS_MOCK_FALLBACK
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
 
       # ------------------------------------------------------------------------
       # ElevenLabs Spoken Audio Voice Personas & API Keys
@@ -50,10 +60,8 @@ services:
         sync: false
 
       # ------------------------------------------------------------------------
-      # Search & Observability Secrets
+      # Observability & AI Triangulation Secrets
       # ------------------------------------------------------------------------
-      - key: SERPAPI_API_KEY
-        sync: false
       - key: SENTRY_DSN
         sync: false
       - key: BACKBOARD_API_KEY
@@ -91,14 +99,24 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
-      - key: DEFAULT_SEARCH_PROVIDER
-        value: serpapi
-      - key: ARGUS_MOCK_FALLBACK
-        value: "false"
       - key: SENTRY_ENVIRONMENT
         value: production
       - key: SENTRY_TRACES_SAMPLE_RATE
         value: "1.0"
+
+      # ------------------------------------------------------------------------
+      # Search Engine & Ingestion Configuration (Prompted in Render Dashboard)
+      # ------------------------------------------------------------------------
+      - key: DEFAULT_SEARCH_PROVIDER
+        sync: false
+      - key: DUCKDUCKGO_ENDPOINT
+        sync: false
+      - key: DUCKDUCKGO_REFERER
+        sync: false
+      - key: ARGUS_MOCK_FALLBACK
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
 
       # ------------------------------------------------------------------------
       # ElevenLabs Spoken Audio Voice Personas & API Keys
@@ -117,10 +135,8 @@ services:
         sync: false
 
       # ------------------------------------------------------------------------
-      # Search & Observability Secrets
+      # Observability & AI Triangulation Secrets
       # ------------------------------------------------------------------------
-      - key: SERPAPI_API_KEY
-        sync: false
       - key: SENTRY_DSN
         sync: false
       - key: BACKBOARD_API_KEY
