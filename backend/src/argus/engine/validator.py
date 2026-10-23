@@ -69,6 +69,7 @@ class ResponseValidator:
 
             # Determine anchor topic for research
             active_topic = topic
+            primary_entity = ""
             stopwords = {
                 "the", "this", "that", "with", "from", "when", "into", "over", "and", "for",
                 "are", "was", "were", "did", "does", "what", "which", "how", "can", "using",
@@ -85,6 +86,9 @@ class ResponseValidator:
                     if len(all_keywords) >= 5:
                         break
                 active_topic = " ".join(all_keywords[:4]) if all_keywords else propositions[0][:50]
+                primary_entity = all_keywords[0] if all_keywords else ""
+            else:
+                primary_entity = active_topic.split()[0] if active_topic.split() else ""
 
             # Execute research via active pluggable search provider
             report: EvidenceReport = self.evaluator.execute_research(
@@ -105,7 +109,12 @@ class ResponseValidator:
                         if w.lower() not in stopwords
                     ]
                     if prop_words:
-                        prop_topic = " ".join(prop_words[:4])
+                        # If proposition lacks the primary entity/context, prepend it so search queries are relevant
+                        if primary_entity and primary_entity.lower() not in prop.lower():
+                            prop_topic = f"{primary_entity} " + " ".join(prop_words[:3])
+                        else:
+                            prop_topic = " ".join(prop_words[:4])
+
                         if prop_topic.lower() != active_topic.lower():
                             prop_report = self.evaluator.execute_research(
                                 topic=prop_topic,
@@ -113,7 +122,20 @@ class ResponseValidator:
                                 decay_lambda=decay_lambda,
                                 engine=engine,
                             )
-                            refined_claim = self._evaluate_proposition(prop, prop_report)
+                            # Merge newly discovered claims and citations into master evidence pool
+                            if prop_report.structured_claims:
+                                for sc in prop_report.structured_claims:
+                                    if not any(existing.claim_id == sc.claim_id for existing in report.structured_claims):
+                                        report.structured_claims.append(sc)
+                                for cit in prop_report.supporting_citations:
+                                    if not any(str(existing.url) == str(cit.url) for existing in report.supporting_citations):
+                                        report.supporting_citations.append(cit)
+                                report.global_confidence_score = round(
+                                    sum(c.confidence_score for c in report.structured_claims) / len(report.structured_claims),
+                                    2,
+                                )
+
+                            refined_claim = self._evaluate_proposition(prop, report)
                             if refined_claim.confidence_score > val_claim.confidence_score:
                                 val_claim = refined_claim
 

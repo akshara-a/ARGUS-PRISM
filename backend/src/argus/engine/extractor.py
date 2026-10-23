@@ -33,7 +33,8 @@ class ClaimExtractor:
             if doc.snippet:
                 text_blocks.append(doc.snippet.strip())
 
-            full_text = " ".join(text_blocks)
+            full_text = ". ".join(text_blocks)
+            full_text = re.sub(r"[\r\n]+", ". ", full_text)
             sentences = self.SPLIT_REGEX.split(full_text)
 
             for sentence in sentences:

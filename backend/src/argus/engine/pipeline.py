@@ -13,7 +13,7 @@ from argus.models.domain import Claim, ConflictItem, NodeState, RawDocument
 class EvidenceEvaluationPipeline:
     """Sequential Chain of Responsibility executing ClaimExtractor -> CredibilityScorer -> FreshnessDecay -> ContradictionDetector."""
 
-    def __init__(self, decay_lambda: float = 0.15, base_score: float = 60.0):
+    def __init__(self, decay_lambda: float = 0.15, base_score: float = 75.0):
         self.decay_lambda = decay_lambda
         self.base_score = base_score
         self.extractor = ClaimExtractor()
@@ -100,7 +100,11 @@ class EvidenceEvaluationPipeline:
 
             # Re-compute with contradiction penalty if conflict detected
             citation_scores = [
-                (cit.tier_weight, cit.age_months or 12.0, cit.decay_multiplier or 0.2)
+                (
+                    cit.tier_weight if cit.tier_weight is not None else 1.0,
+                    cit.age_months if cit.age_months is not None else 1.0,
+                    cit.decay_multiplier if cit.decay_multiplier is not None else 0.86,
+                )
                 for cit in c.supporting_citations
             ]
             final_score, breakdown = DeterministicScorer.compute_claim_confidence(

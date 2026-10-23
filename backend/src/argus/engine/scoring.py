@@ -17,11 +17,15 @@ class CredibilityDecorator:
         re.compile(r"(^|\.)github\.com$", re.I),
         re.compile(r"(^|\.)gitlab\.com$", re.I),
         re.compile(r"^docs\.", re.I),
+        re.compile(r"^api\.", re.I),
+        re.compile(r"^developer\.", re.I),
         re.compile(r"^learn\.microsoft\.com$", re.I),
         re.compile(r"(^|\.)microsoft\.com$", re.I),
         re.compile(r"(^|\.)python\.org$", re.I),
         re.compile(r"(^|\.)pypi\.org$", re.I),
         re.compile(r"(^|\.)npmjs\.com$", re.I),
+        re.compile(r"(^|\.)crates\.io$", re.I),
+        re.compile(r"(^|\.)pkg\.go\.dev$", re.I),
         re.compile(r"(^|\.)rust-lang\.org$", re.I),
         re.compile(r"(^|\.)golang\.org$", re.I),
         re.compile(r"(^|\.)kubernetes\.io$", re.I),
@@ -43,22 +47,38 @@ class CredibilityDecorator:
         re.compile(r"(^|\.)postgresql\.org$", re.I),
         re.compile(r"(^|\.)kernel\.org$", re.I),
         re.compile(r"(^|\.)oauth\.net$", re.I),
+        re.compile(r"(^|\.)wikipedia\.org$", re.I),
+        re.compile(r"(^|\.)wikimedia\.org$", re.I),
+        re.compile(r"(^|\.)readthedocs\.(io|org)$", re.I),
+        re.compile(r"(^|\.)gitbook\.(io|com)$", re.I),
+        re.compile(r"(^|\.)github\.io$", re.I),
         re.compile(r"\.gov$", re.I),
         re.compile(r"\.edu$", re.I),
     ]
 
-    # Tier 2: Peer-reviewed or high-reputation engineering hubs (1.0x)
+    # Tier 2: Peer-reviewed literature, recognized tutorials, and engineering hubs (1.0x)
     TIER_2_PATTERNS = [
         re.compile(r"(^|\.)stackoverflow\.com$", re.I),
         re.compile(r"(^|\.)stackexchange\.com$", re.I),
+        re.compile(r"(^|\.)realpython\.com$", re.I),
+        re.compile(r"(^|\.)geeksforgeeks\.org$", re.I),
+        re.compile(r"(^|\.)freecodecamp\.org$", re.I),
+        re.compile(r"(^|\.)w3schools\.com$", re.I),
+        re.compile(r"(^|\.)baeldung\.com$", re.I),
+        re.compile(r"(^|\.)tutorialspoint\.com$", re.I),
+        re.compile(r"(^|\.)martinfowler\.com$", re.I),
         re.compile(r"(^|\.)netflixtechblog\.com$", re.I),
         re.compile(r"(^|\.)eng\.uber\.com$", re.I),
         re.compile(r"(^|\.)blog\.cloudflare\.com$", re.I),
         re.compile(r"(^|\.)lwn\.net$", re.I),
         re.compile(r"(^|\.)dev\.to$", re.I),
+        re.compile(r"(^|\.)towardsdatascience\.com$", re.I),
         re.compile(r"(^|\.)news\.ycombinator\.com$", re.I),
         re.compile(r"(^|\.)arxiv\.org$", re.I),
         re.compile(r"(^|\.)infoq\.com$", re.I),
+        re.compile(r"(^|\.)openalex\.org$", re.I),
+        re.compile(r"(^|\.)ieee\.org$", re.I),
+        re.compile(r"(^|\.)acm\.org$", re.I),
     ]
 
     @classmethod
@@ -82,7 +102,7 @@ class CredibilityDecorator:
             if pat.search(domain):
                 return CredibilityTier.TIER_2_COMMUNITY, 1.0
 
-        # Tier 3 (Default)
+        # Tier 3 (Default general web baseline)
         return CredibilityTier.TIER_3_UNVERIFIED, 0.5
 
 
@@ -188,7 +208,7 @@ class BayesianConfidenceEngine:
 class DeterministicScorer:
     """Calculates composite deterministic score for claims."""
 
-    DEFAULT_BASE_SCORE = 60.0
+    DEFAULT_BASE_SCORE = 75.0
     CORROBORATION_MULTIPLIER = 1.20   # +20% boost when verified across multiple sources
     CONFLICT_PENALTY_FACTOR = 0.60    # 40% penalty if contradicted by another source
 
@@ -221,7 +241,7 @@ class DeterministicScorer:
         is_corroborated: bool,
         has_contradiction: bool,
         decay_lambda: float = 0.15,
-        base_score: float = 60.0,
+        base_score: float = 75.0,
         domain_category: str = "General Engineering",
         inferred_lambda: Optional[float] = None,
     ) -> Tuple[float, ScoreBreakdown]:

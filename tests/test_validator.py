@@ -100,3 +100,24 @@ def test_validate_empty_response():
     assert report.total_claims_evaluated == 0
     assert report.verdict == ValidationVerdict.HIGH_HALLUCINATION_RISK
     assert "No assertional factual propositions" in report.summary
+
+
+def test_validate_multi_proposition_targeted_enrichment():
+    """Verify multi-proposition responses are enriched across distinct propositions."""
+    provider = MockSearchStrategy()
+    evaluator = ResearchEvaluator(provider=provider)
+
+    # Multi-proposition input testing subject-entity preservation
+    llm_response = (
+        "FastAPI async endpoints achieve high throughput on Uvicorn. "
+        "UnifiedAPI v2 provides robust data validation for modern microservices."
+    )
+
+    report = evaluator.validate_response(
+        response_text=llm_response,
+        topic="FastAPI UnifiedAPI architecture",
+    )
+
+    assert report.total_claims_evaluated == 2
+    assert report.overall_validity_score > 0.0
+    assert len(report.validated_propositions) == 2
