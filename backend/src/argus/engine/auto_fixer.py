@@ -20,15 +20,24 @@ class FactualAutoFixer:
         if prop.suggested_correction:
             return prop.suggested_correction
 
-        if prop.contradiction_warning:
-            return f"{prop.proposition_text.rstrip('.')} (Note: superseded by official changelogs: {prop.contradiction_warning})."
-
-        # Hallucination trap fallback
-        if prop.status == NodeState.WEAK or prop.confidence_score <= 1.0:
+        # Hallucination trap fallback (zero evidence)
+        if prop.status == NodeState.WEAK and prop.confidence_score <= 1.0:
             return (
                 f"[Factual Correction: The assertion '{prop.proposition_text}' is unsubstantiated with "
                 f"zero empirical evidence in official package registries and documentation.]"
             )
+
+        # Refuted claims (overruled by later versions)
+        if prop.status == NodeState.REFUTED and prop.contradiction_warning:
+            return f"{prop.proposition_text.rstrip('.')} (Note: superseded by official release notes: {prop.contradiction_warning})."
+
+        # Weak / unverified claims (unreleased or uncorroborated)
+        if prop.status == NodeState.WEAK:
+            warning = prop.contradiction_warning or "Insufficient corroboration in authoritative sources"
+            return f"{prop.proposition_text.rstrip('.')} (Note: unverified assertion — {warning.rstrip('.')}; verify if this version or specification has been officially released)."
+
+        if prop.contradiction_warning:
+            return f"{prop.proposition_text.rstrip('.')} (Note: {prop.contradiction_warning})."
 
         return prop.proposition_text
 
