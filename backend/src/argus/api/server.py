@@ -134,7 +134,7 @@ def validate_draft(req: ValidateRequest) -> Dict[str, Any]:
     if not input_text:
         raise HTTPException(status_code=400, detail="Draft text cannot be empty.")
 
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider, default_lambda=req.decay_lambda)
 
     report = evaluator.validate_response(
@@ -281,7 +281,7 @@ def export_footnotes(req: ExportFootnotesRequest) -> Dict[str, Any]:
     """Export article as publication-ready markdown with numerical footnotes and bibliography."""
     if not req.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty.")
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider)
     report = evaluator.validate_response(response_text=req.text, topic=req.topic, llm_backend=req.llm_backend)
     result = AcademicExporter.export_publication_markdown(req.text, report, style=req.style or "ieee")
@@ -294,7 +294,7 @@ def auto_fix_draft(req: AutoFixRequest) -> Dict[str, Any]:
     if not req.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty.")
 
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider)
     report = evaluator.validate_response(response_text=req.text, llm_backend=req.llm_backend)
     fix_data = FactualAutoFixer.repair_document(req.text, report)
@@ -311,7 +311,7 @@ def auto_fix_draft(req: AutoFixRequest) -> Dict[str, Any]:
 @app.post("/api/research")
 def execute_research(req: ResearchRequest) -> Dict[str, Any]:
     """Execute full adversarial multi-vector research workflow on a topic."""
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider, default_lambda=req.decay_lambda)
     report = evaluator.execute_research(
         topic=req.topic,
@@ -331,7 +331,7 @@ def execute_research(req: ResearchRequest) -> Dict[str, Any]:
 @app.post("/api/compare")
 def compare_technologies(req: CompareRequest) -> Dict[str, Any]:
     """Empirical head-to-head comparison between Tech A and Tech B."""
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider)
     comp_report = evaluator.compare_technologies(
         tech_a=req.tech_a,
@@ -366,7 +366,7 @@ def chat_fact_check(req: ChatFactCheckRequest) -> Dict[str, Any]:
     if not query_text:
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
 
-    provider = get_provider(req.provider or "duckduckgo", fallback_to_mock=True)
+    provider = get_provider(req.provider or "duckduckgo")
     evaluator = ResearchEvaluator(provider=provider)
 
     canonical_assertion = _canonicalize_query(query_text)

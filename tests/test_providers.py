@@ -83,6 +83,35 @@ def test_duckduckgo_search_provider():
     assert all(hasattr(d, "url") and hasattr(d, "snippet") for d in docs)
 
 
+def test_duckduckgo_zero_results_avoids_unnecessary_fallback(monkeypatch):
+    """Test that 0 results from DuckDuckGo does NOT fall back to mock."""
+    from argus.providers import DuckDuckGoSearchStrategy
+
+    ddg = DuckDuckGoSearchStrategy(fallback_to_mock=True, endpoint="https://example.com/search")
+    # Simulate live fetch returning 0 results
+    monkeypatch.setattr(ddg, "_fetch_ddg_html", lambda *args, **kwargs: [])
+
+    docs = ddg.search("SuperObscureNonExistentQueryXYZ12345")
+    # Must return empty list, NOT mock documents
+    assert docs == []
+
+
+def test_adversarial_query_builder_concise_vectors():
+    """Test that query builder produces concise queries avoiding keyword over-specification."""
+    from argus.engine.adversarial_builder import AdversarialQueryBuilder
+
+    builder = AdversarialQueryBuilder(current_year=2026)
+    topic = "FastAPI async high-throughput performance"
+    vectors = builder.build_search_vectors(topic, domain_context="Web Services")
+
+    assert len(vectors) == 3
+    for v in vectors:
+        words = v.query_text.split()
+        # Verify no 10+ word queries that break search engines
+        assert len(words) <= 7, f"Query '{v.query_text}' exceeds 7 words ({len(words)} words)"
+
+
+
 def test_get_provider_factory():
     """Test get_provider factory for all supported options."""
     from argus.providers import (

@@ -17,8 +17,8 @@ def get_provider(
     Supported names: 'duckduckgo' (or 'ddg'), 'serpapi' (or 'google'), 'mock'.
     """
     if fallback_to_mock is None:
-        mock_env = os.getenv("ARGUS_MOCK_FALLBACK", "true").lower()
-        fallback_to_mock = mock_env not in ("false", "0", "no")
+        mock_env = os.getenv("ARGUS_MOCK_FALLBACK", "false").lower()
+        fallback_to_mock = mock_env in ("true", "1", "yes")
 
     effective_api_key = api_key or os.getenv("SERPAPI_API_KEY")
     default_provider = os.getenv("DEFAULT_SEARCH_PROVIDER", "duckduckgo")

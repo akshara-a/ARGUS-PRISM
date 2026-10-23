@@ -73,11 +73,8 @@ class DuckDuckGoSearchStrategy(ISearchProvider):
         # 2. Live DuckDuckGo Search Execution
         try:
             docs = self._fetch_ddg_html(query, num_results=num_results, vector_type=vector_type)
-            if not docs and self.fallback_to_mock and self.mock_provider:
-                logger.warning("DuckDuckGo returned 0 results for '%s', falling back to mock", query)
-                return self.mock_provider.search(
-                    query=query, engine=engine, num_results=num_results, vector_type=vector_type
-                )
+            if not docs:
+                logger.info("DuckDuckGo returned 0 results for '%s'", query)
         except Exception as exc:
             logger.warning("DuckDuckGo retrieval failed: %s", exc)
             if self.fallback_to_mock and self.mock_provider:
@@ -110,6 +107,10 @@ class DuckDuckGoSearchStrategy(ISearchProvider):
         """Query DuckDuckGo Lite endpoint and parse into RawDocument entities."""
         if not self.endpoint or not self.endpoint.startswith("http"):
             logger.warning("DuckDuckGo retrieval skipped: DUCKDUCKGO_ENDPOINT is not configured.")
+            if self.fallback_to_mock and self.mock_provider:
+                return self.mock_provider.search(
+                    query=query, num_results=num_results, vector_type=vector_type
+                )
             return []
 
         headers = {
