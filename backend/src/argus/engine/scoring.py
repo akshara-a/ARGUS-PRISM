@@ -98,8 +98,8 @@ class FreshnessDecayCalculator:
     ) -> float:
         """Calculate age in months from publication date."""
         if not published_date:
-            # If no date is available, apply conservative 12-month age penalty
-            return 12.0
+            # Default to fresh/current baseline (1 month) when no explicit publication timestamp is provided
+            return 1.0
 
         ref = reference_date or datetime.now(timezone.utc)
         if published_date.tzinfo is None:

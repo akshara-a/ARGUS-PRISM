@@ -115,6 +115,29 @@ class ResearchStateMachine:
                 unique_docs_by_url[d.url] = d
         normalized_documents = list(unique_docs_by_url.values())
 
+        # 2.5 Deep Page Crawling on top search URLs
+        # Extract full page article text from top authoritative documentation sources
+        from argus.engine.url_crawler import WebpageAuditor
+        deep_crawled_count = 0
+        is_mock_provider = "mock" in self.provider.provider_name.lower()
+
+        if not is_mock_provider:
+            for doc in normalized_documents:
+                if deep_crawled_count >= 3:
+                    break
+                if not doc.url.startswith("http") or doc.engine in ("crawler", "mock"):
+                    continue
+
+                try:
+                    crawl_data = WebpageAuditor.fetch_url_content(doc.url, max_words=350)
+                    content = (crawl_data.get("content") or "").strip()
+                    if content and len(content.split()) > 20:
+                        # Enrich snippet with full article content
+                        doc.snippet = f"{doc.snippet} {content}".strip()
+                        deep_crawled_count += 1
+                except Exception as exc:
+                    logger.debug("Deep crawl skipped for %s: %s", doc.url, exc)
+
         # 3. Evaluating State: Run through Chain of Responsibility pipeline
         self._transition_to(
             MasterState.STATE_EVALUATING,

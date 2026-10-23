@@ -4,6 +4,11 @@ import logging
 import re
 from typing import List, Optional
 from argus.engine.extractor import ClaimExtractor
+from argus.engine.semantic_matcher import (
+    NaturalLanguageInferenceEngine,
+    NLIVerdict,
+    SemanticSimilarityEngine,
+)
 from argus.models.domain import (
     Claim,
     EvidenceReport,
@@ -64,16 +69,22 @@ class ResponseValidator:
 
             # Determine anchor topic for research
             active_topic = topic
+            stopwords = {
+                "the", "this", "that", "with", "from", "when", "into", "over", "and", "for",
+                "are", "was", "were", "did", "does", "what", "which", "how", "can", "using",
+                "use", "used", "running", "integrates", "provides", "achieve", "achieves"
+            }
             if not active_topic:
-                first_p = propositions[0]
-                words = [
-                    w for w in re.findall(r"[A-Za-z0-9_\-\.]{3,}", first_p)
-                    if w.lower() not in (
-                        "the", "this", "that", "with", "from", "when", "into", "over", "and", "for",
-                        "are", "was", "were", "did", "does", "what", "which", "how", "can"
-                    )
-                ]
-                active_topic = " ".join(words[:6]) if words else first_p[:50]
+                all_keywords = []
+                for p in propositions:
+                    for w in re.findall(r"[A-Za-z0-9_\-\.]{3,}", p):
+                        if w.lower() not in stopwords and w.lower() not in [k.lower() for k in all_keywords]:
+                            all_keywords.append(w)
+                            if len(all_keywords) >= 5:
+                                break
+                    if len(all_keywords) >= 5:
+                        break
+                active_topic = " ".join(all_keywords[:4]) if all_keywords else propositions[0][:50]
 
             # Execute research via active pluggable search provider
             report: EvidenceReport = self.evaluator.execute_research(
@@ -87,6 +98,25 @@ class ResponseValidator:
 
             for prop in propositions:
                 val_claim = self._evaluate_proposition(prop, report)
+                # Multi-proposition targeted refinement: if proposition remains uncorroborated by broad anchor topic
+                if (val_claim.status == NodeState.WEAK or val_claim.confidence_score < 40.0) and len(propositions) > 1:
+                    prop_words = [
+                        w for w in re.findall(r"[A-Za-z0-9_\-\.]{2,}", prop)
+                        if w.lower() not in stopwords
+                    ]
+                    if prop_words:
+                        prop_topic = " ".join(prop_words[:4])
+                        if prop_topic.lower() != active_topic.lower():
+                            prop_report = self.evaluator.execute_research(
+                                topic=prop_topic,
+                                domain_context=domain_context,
+                                decay_lambda=decay_lambda,
+                                engine=engine,
+                            )
+                            refined_claim = self._evaluate_proposition(prop, prop_report)
+                            if refined_claim.confidence_score > val_claim.confidence_score:
+                                val_claim = refined_claim
+
                 validated_claims.append(val_claim)
 
             # Aggregate counts
@@ -194,38 +224,40 @@ class ResponseValidator:
                 suggested_correction="Verify whether the referenced library or component actually exists.",
             )
 
-        # 2. Check for best match in structured claims
+        # 2. Check for best match in structured claims via Semantic Cosine & NLI Entailment
         best_match: Optional[Claim] = None
         best_score = 0.0
-        best_jaccard = 0.0
+        best_nli_res = None
 
         for claim in report.structured_claims:
-            c_tokens = self._tokenize_semantic(claim.claim_text)
-            intersection = p_tokens.intersection(c_tokens)
-            union = p_tokens.union(c_tokens)
-            jaccard = len(intersection) / max(1, len(union))
+            nli_res = NaturalLanguageInferenceEngine.evaluate_entailment(
+                premise=claim.claim_text,
+                hypothesis=proposition,
+            )
+            sim = SemanticSimilarityEngine.cosine_similarity(claim.claim_text, proposition)
 
             # Prioritize verified claims over weak claims
             tier_mult = 1.6 if claim.node_state == NodeState.VERIFIED else (0.4 if claim.node_state == NodeState.WEAK else 1.0)
-            score = jaccard * tier_mult
+            score = sim * tier_mult
 
-            if len(intersection) >= 2 and score > best_score:
-                best_score = score
-                best_jaccard = jaccard
+            # Direct contradiction detection
+            if nli_res.verdict == NLIVerdict.CONTRADICTION and score > 0.15:
                 best_match = claim
+                best_score = score
+                best_nli_res = nli_res
+                break
+
+            if nli_res.verdict == NLIVerdict.ENTAILMENT and score > best_score:
+                best_score = score
+                best_match = claim
+                best_nli_res = nli_res
 
         # 3. If best match is found in structured claims:
-        if best_match and (best_jaccard >= 0.10 or best_score >= 0.12):
+        if best_match and best_score >= 0.12 and best_nli_res:
             warning = None
             correction = None
 
-            # Check polarity conflict: proposition asserts safe/recommended, but evidence states deprecated/removed
-            positive_markers = {"safe", "recommended", "production ready", "stable", "compatible", "supported"}
-            negative_markers = {"deprecated", "removed", "unsupported", "discontinued", "breaking change"}
-            prop_is_positive = any(m in proposition.lower() for m in positive_markers)
-            claim_is_negative = any(m in best_match.claim_text.lower() for m in negative_markers)
-
-            if best_match.node_state == NodeState.REFUTED or (prop_is_positive and claim_is_negative):
+            if best_nli_res.verdict == NLIVerdict.CONTRADICTION or best_match.node_state == NodeState.REFUTED:
                 # Find matching conflict for authoritative correction
                 for conf in report.detailed_conflicts:
                     if conf.claim_a == best_match.claim_text or conf.claim_b == best_match.claim_text:
@@ -255,7 +287,7 @@ class ResponseValidator:
                     contradiction_warning=best_match.conflict_rationale or "Proposition is contested across sources.",
                 )
             else:
-                # VERIFIED
+                # VERIFIED via Semantic Entailment
                 return ValidatedClaim(
                     proposition_text=proposition,
                     status=NodeState.VERIFIED,

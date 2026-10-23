@@ -19,8 +19,8 @@ class ContradictionDetector:
         "supported",
         "optimal",
         "zero leak",
-        "fast",
         "high performance",
+        "high throughput",
         "works properly",
         "rock-solid",
     }
@@ -50,17 +50,19 @@ class ContradictionDetector:
             "this", "that", "with", "from", "have", "were", "been", "into", "their",
             "what", "when", "where", "which", "more", "most", "also", "some", "official",
             "officially", "guide", "tutorial", "overview", "documentation", "article",
-            "latest", "recent", "about", "your", "than", "then", "just"
+            "latest", "recent", "about", "your", "than", "then", "just", "and", "in",
+            "for", "the", "a", "an", "to", "of", "on", "at", "by", "is", "are", "as",
+            "be", "it", "or", "using", "use", "used"
         }
         return {t for t in tokens if t not in stopwords}
 
     def _has_positive_polarity(self, text: str) -> bool:
         t_lower = text.lower()
-        return any(ind in t_lower for ind in self.POSITIVE_INDICATORS)
+        return any(re.search(rf"\b{re.escape(ind)}\b", t_lower) for ind in self.POSITIVE_INDICATORS)
 
     def _has_negative_polarity(self, text: str) -> bool:
         t_lower = text.lower()
-        return any(ind in t_lower for ind in self.NEGATIVE_INDICATORS)
+        return any(re.search(rf"\b{re.escape(ind)}\b", t_lower) for ind in self.NEGATIVE_INDICATORS)
 
     def detect_conflicts(self, claims: List[Claim]) -> List[ConflictItem]:
         """Identify pairwise contradictions among claims and update contradiction lists."""
@@ -74,9 +76,9 @@ class ContradictionDetector:
                 kw1 = self._extract_keywords(c1.claim_text)
                 kw2 = self._extract_keywords(c2.claim_text)
 
-                # Check subject/entity overlap
+                # Check subject/entity overlap: require at least 2 distinct domain keywords
                 shared_keywords = kw1.intersection(kw2)
-                if len(shared_keywords) < 1:
+                if len(shared_keywords) < 2:
                     continue
 
                 pos1 = self._has_positive_polarity(c1.claim_text)

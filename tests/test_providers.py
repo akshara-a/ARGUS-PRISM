@@ -87,13 +87,35 @@ def test_duckduckgo_zero_results_avoids_unnecessary_fallback(monkeypatch):
     """Test that 0 results from DuckDuckGo does NOT fall back to mock."""
     from argus.providers import DuckDuckGoSearchStrategy
 
-    ddg = DuckDuckGoSearchStrategy(fallback_to_mock=True, endpoint="https://example.com/search")
-    # Simulate live fetch returning 0 results
+    ddg = DuckDuckGoSearchStrategy(fallback_to_mock=False, endpoint="https://example.com/search")
+    ddg.cache.clear()
+    # Simulate all live fetch tiers returning 0 results
+    monkeypatch.setattr(ddg, "_fetch_ddgs", lambda *args, **kwargs: [])
     monkeypatch.setattr(ddg, "_fetch_ddg_html", lambda *args, **kwargs: [])
+    monkeypatch.setattr(ddg, "_fetch_wikipedia", lambda *args, **kwargs: [])
 
     docs = ddg.search("SuperObscureNonExistentQueryXYZ12345")
     # Must return empty list, NOT mock documents
     assert docs == []
+
+
+def test_semantic_similarity_and_nli():
+    """Test semantic cosine similarity and NLI entailment logic."""
+    from argus.engine.semantic_matcher import NaturalLanguageInferenceEngine, NLIVerdict, SemanticSimilarityEngine
+
+    p1 = "FastAPI async endpoints achieve high throughput using AnyIO concurrency, running on Uvicorn."
+    ev1 = "Starlette and FastAPI are based on AnyIO, which makes it compatible with asyncio and Trio."
+    noise = "FastAPI changelog breaking changes in 2026."
+
+    sim_ev = SemanticSimilarityEngine.cosine_similarity(p1, ev1)
+    sim_noise = SemanticSimilarityEngine.cosine_similarity(p1, noise)
+
+    assert sim_ev > sim_noise
+    assert sim_ev >= 0.20
+
+    nli_res = NaturalLanguageInferenceEngine.evaluate_entailment(premise=ev1, hypothesis=p1)
+    assert nli_res.verdict == NLIVerdict.ENTAILMENT
+    assert nli_res.entailment_score >= 0.50
 
 
 def test_adversarial_query_builder_concise_vectors():
